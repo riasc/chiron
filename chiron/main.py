@@ -8,14 +8,13 @@ import random
 def main():
     options = parse_arguments()
 
-    survey = parse_survey_file(options.survey)
+    # get survey data
+    survey = parse_survey(options.input, options.type)
+
     df = next(iter(survey.values()))
 
     # Extract the first column
     first_column = df.iloc[:, 0]
-
-    for x in first_column:
-        print(x)
 
     # prepare output
     folder_exists(options.output)
@@ -33,15 +32,17 @@ def folder_exists(folder):
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
 
-def parse_survey_file(survey_file):
-    converted = rdata.read_rda(survey_file)
+def parse_survey(input, type):
+    exposomeA = Path(input) / Path("PEGS_freeze_v3.1_nonpii/Surveys/Exposome/exposomea_29jul22_v3.1_nonpii_" + type + "_synthetic.RData")
+    converted = rdata.read_rda(exposomeA)
     return converted
 
 
 def parse_arguments():
     p = configargparse.ArgParser()
     # define the parameters
-    p.add_argument("-s", "--survey", help="Survey files", required=True)
+    p.add_argument("-i", "--input", help="Survey files", required=True)
+    p.add_argument("-t", "--type", help="Type of data (e.g, train/val)", required=True)
     p.add_argument("-o", "--output", help="Output file", required=True)
 
     return p.parse_args()

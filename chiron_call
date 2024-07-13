@@ -1,1 +1,3 @@
-python chiron/main.py --survey /Users/sej9799/Documents/projects/chiron/data/train_data_synthetic/PEGS_freeze_v3.1_nonpii/Surveys/Exposome/exposomea_29jul22_v3.1_nonpii_train_synthetic.RData --output /Users/sej9799/Documents/projects/chiron/output
+python chiron/main.py --input /Users/sej9799/Documents/projects/chiron/data/train_data_synthetic/ \
+--type train \
+--output /Users/sej9799/Documents/projects/chiron/output

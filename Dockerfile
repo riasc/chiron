@@ -14,4 +14,4 @@ WORKDIR /usr/local/bin
 COPY chiron/main.py .
 RUN chmod +x main.py
 
-ENTRYPOINT [ "python3", "main.py" ]
+ENTRYPOINT [ "python3", "main.py", "--input", "/input", "--type" , "val", "--output", "/output" ]
