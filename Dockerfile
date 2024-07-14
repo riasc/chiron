@@ -3,7 +3,7 @@
 # Based on Ubuntu v23.04
 ############################################################
 
-FROM python:3.9.19-slim
+FROM python:3.10-slim
 LABEL authors="Richard A. Schäfer"
 
 # update sources list
@@ -18,4 +18,5 @@ COPY data/val_data_synthetic/PEGS_freeze_v3.1_nonpii/Surveys/Exposome/exposomea_
 
 RUN chmod +x main.py
 
-ENTRYPOINT [ "python3", "main.py", "--input", "/usr/local/bin/data/", "--type" , "val", "--output", "/output" ]
+#ENTRYPOINT [ "python3", "main.py", "--input", "/usr/local/bin/data/", "--type" , "val", "--output", "/output" ]
+ENTRYPOINT [ "ls", "/input"]
