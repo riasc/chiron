@@ -1,7 +1,7 @@
-import configargparse
-import rdata
 import os
 from pathlib import Path
+import configargparse
+import rdata
 import random
 
 
@@ -34,7 +34,7 @@ def folder_exists(folder):
 
 def parse_survey(input, type):
     exposomeA = Path(input) / Path("PEGS_freeze_v3.1_nonpii/Surveys/Exposome/exposomea_29jul22_v3.1_nonpii_" + type + "_synthetic.RData")
-    converted = rdata.read_rda(exposomeA)
+    converted = rdata.read_rda(str(exposomeA))
     return converted
 
 
