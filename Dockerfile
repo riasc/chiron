@@ -14,6 +14,8 @@ RUN pip3 install configargparse
 
 WORKDIR /usr/local/bin
 COPY chiron/main.py .
+COPY data/val_data_synthetic/PEGS_freeze_v3.1_nonpii/Surveys/Exposome/exposomea_29jul22_v3.1_nonpii_val_synthetic.RData data/
+
 RUN chmod +x main.py
 
-ENTRYPOINT [ "python3", "main.py", "--input", "/input", "--type" , "val", "--output", "/output" ]
+ENTRYPOINT [ "python3", "main.py", "--input", "/usr/local/bin/data/", "--type" , "val", "--output", "/output" ]

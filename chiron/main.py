@@ -33,7 +33,7 @@ def folder_exists(folder):
         path.mkdir(parents=True, exist_ok=True)
 
 def parse_survey(input, type):
-    exposomeA = Path(input) / Path(type+"_data_synthetic/PEGS_freeze_v3.1_nonpii/Surveys/Exposome/exposomea_29jul22_v3.1_nonpii_" + type + "_synthetic.RData")
+    exposomeA = Path(input) / Path("exposomea_29jul22_v3.1_nonpii_" + type + "_synthetic.RData")
     converted = rdata.read_rda(str(exposomeA))
     return converted
 
