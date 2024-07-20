@@ -1,0 +1,264 @@
+/input
+├── SYNAPSE_METADATA_MANIFEST.tsv
+├── train_data
+│   ├── PEGS_freeze_v3.1_nonpii
+│   │   ├── Common
+│   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   │   └── file_guide_v3.1_nonpii.xlsx
+│   │   ├── Geospatial
+│   │   │   ├── EJI
+│   │   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   │   │   ├── eji_21jun23_v3.1_nonpii_train.RData
+│   │   │   │   ├── eji_codebook_21jun23_v3.1_nonpii.pdf
+│   │   │   │   ├── eji_codebook_appendix_21jun23_v3.1_nonpii.pdf
+│   │   │   │   └── eji_documentation_21jun23_v3.1_nonpii.pdf
+│   │   │   ├── Earthdata
+│   │   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   │   │   ├── earthdata_15dec22_v3.1_nonpii_train.RData
+│   │   │   │   ├── earthdata_codebook_15dec22_v3.1_nonpii.pdf
+│   │   │   │   ├── earthdata_codebook_appendix_15dec22_v3.1_nonpii.pdf
+│   │   │   │   └── earthdata_documentation_15dec22_v3.1_nonpii.pdf
+│   │   │   ├── Hazards
+│   │   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   │   │   ├── hazards_15dec22_v3.1_nonpii_train.RData
+│   │   │   │   ├── hazards_codebook_15dec22_v3.1_nonpii.pdf
+│   │   │   │   ├── hazards_codebook_appendix_15dec22_v3.1_nonpii.pdf
+│   │   │   │   └── hazards_documentation_15dec22_v3.1_nonpii.pdf
+│   │   │   ├── SVI
+│   │   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   │   │   ├── svi_21jun23_v3.1_nonpii_train.RData
+│   │   │   │   ├── svi_codebook_21jun23_v3.1_nonpii.pdf
+│   │   │   │   ├── svi_codebook_appendix_21jun23_v3.1_nonpii.pdf
+│   │   │   │   └── svi_documentation_21jun23_v3.1_nonpii.pdf
+│   │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   ├── MAP
+│   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   │   ├── bcbb_map_22jun22_v3.1_nonpii_train.RData
+│   │   │   ├── bcbb_map_codebook_22jun22_v3.1_nonpii.pdf
+│   │   │   └── bcbb_map_codebook_appendix_22jun22_v3.1_nonpii.pdf
+│   │   ├── PEGS_survey_data_README.txt
+│   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   └── Surveys
+│   │       ├── Exposome
+│   │       │   ├── Exposome_A_Survey_Paper_v3.1_nonpii.pdf
+│   │       │   ├── Exposome_B_Survey_Paper_v3.1_nonpii.pdf
+│   │       │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │       │   ├── exposomea_29jul22_v3.1_nonpii_train.RData
+│   │       │   ├── exposomea_codebook_29jul22_v3.1_nonpii.pdf
+│   │       │   ├── exposomea_codebook_appendix_29jul22_v3.1_nonpii.pdf
+│   │       │   ├── exposomeb_29jul22_v3.1_nonpii_train.RData
+│   │       │   ├── exposomeb_codebook_29jul22_v3.1_nonpii.pdf
+│   │       │   └── exposomeb_codebook_appendix_29jul22_v3.1_nonpii.pdf
+│   │       ├── Health_and_Exposure
+│   │       │   ├── EPR_Health_and_Exposure_Survey_Version2_v3.1_nonpii.pdf
+│   │       │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │       │   ├── healthexposure_16jun22_v3.1_nonpii_train.RData
+│   │       │   ├── healthexposure_codebook_16jun22_v3.1_nonpii.pdf
+│   │       │   └── healthexposure_codebook_appendix_16jun22_v3.1_nonpii.pdf
+│   │       └── SYNAPSE_METADATA_MANIFEST.tsv
+│   ├── PEGS_genomic_data
+│   │   ├── HLA_genotypes
+│   │   │   ├── PEGS_HLA-A_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-B_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-C_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DMA_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DMB_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DOA_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DOB_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DPA1_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DPB1_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DQA1_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DQB1_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DRA_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DRB1_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DRB3_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-DRB5_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-F_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-G_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-H_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-J_genotypes_train.txt
+│   │   │   ├── PEGS_HLA-L_genotypes_train.txt
+│   │   │   ├── PEGS_HLA_genotypes_README.txt
+│   │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   ├── PEGS_genomic_data_README.txt
+│   │   ├── SNVs_small_indels
+│   │   │   ├── PEGS_GWAS_genotypes_v1.1_train.bed
+│   │   │   ├── PEGS_GWAS_genotypes_v1.1_train.bim
+│   │   │   ├── PEGS_GWAS_genotypes_v1.1_train.fam
+│   │   │   ├── PEGS_SNV_small_indel_README.txt
+│   │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   ├── local_ancestry
+│   │   │   ├── PEGS_Estimated_Ancestry_Fractions_train.xlsx
+│   │   │   ├── PEGS_local_ancestry_README.txt
+│   │   │   ├── PEGS_local_ancestry_chr10_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr11_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr12_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr13_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr14_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr15_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr16_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr17_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr18_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr19_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr1_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr20_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr21_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr22_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr2_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr3_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr4_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr5_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr6_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr7_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr8_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chr9_train.msp.tsv
+│   │   │   ├── PEGS_local_ancestry_chrX_train.msp.tsv
+│   │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   ├── methylation
+│   │   │   ├── MethylationEPIC_v-1-0_B2.csv
+│   │   │   ├── PEGS_methylation_README.txt
+│   │   │   ├── PEGS_methylation_beta_train.rds
+│   │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   ├── structural_variants
+│   │   │   ├── PEGS_SV_README.txt
+│   │   │   ├── PEGS_SV_genotypes_train.vcf.gz
+│   │   │   ├── PEGS_SV_genotypes_train.vcf.gz.tbi
+│   │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+│   │   └── telomere_content
+│   │       ├── PEGS_telomere_content_README.txt
+│   │       ├── PEGS_telomere_content_estimates_train.xlsx
+│   │       └── SYNAPSE_METADATA_MANIFEST.tsv
+│   └── SYNAPSE_METADATA_MANIFEST.tsv
+└── val_data
+    ├── PEGS_freeze_v3.1_nonpii
+    │   ├── Common
+    │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │   │   └── file_guide_v3.1_nonpii.xlsx
+    │   ├── Geospatial
+    │   │   ├── EJI
+    │   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │   │   │   ├── eji_21jun23_v3.1_nonpii_val.RData
+    │   │   │   ├── eji_codebook_21jun23_v3.1_nonpii.pdf
+    │   │   │   ├── eji_codebook_appendix_21jun23_v3.1_nonpii.pdf
+    │   │   │   └── eji_documentation_21jun23_v3.1_nonpii.pdf
+    │   │   ├── Earthdata
+    │   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │   │   │   ├── earthdata_15dec22_v3.1_nonpii_val.RData
+    │   │   │   ├── earthdata_codebook_15dec22_v3.1_nonpii.pdf
+    │   │   │   ├── earthdata_codebook_appendix_15dec22_v3.1_nonpii.pdf
+    │   │   │   └── earthdata_documentation_15dec22_v3.1_nonpii.pdf
+    │   │   ├── Hazards
+    │   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │   │   │   ├── hazards_15dec22_v3.1_nonpii_val.RData
+    │   │   │   ├── hazards_codebook_15dec22_v3.1_nonpii.pdf
+    │   │   │   ├── hazards_codebook_appendix_15dec22_v3.1_nonpii.pdf
+    │   │   │   └── hazards_documentation_15dec22_v3.1_nonpii.pdf
+    │   │   ├── SVI
+    │   │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │   │   │   ├── svi_21jun23_v3.1_nonpii_val.RData
+    │   │   │   ├── svi_codebook_21jun23_v3.1_nonpii.pdf
+    │   │   │   ├── svi_codebook_appendix_21jun23_v3.1_nonpii.pdf
+    │   │   │   └── svi_documentation_21jun23_v3.1_nonpii.pdf
+    │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+    │   ├── MAP
+    │   │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │   │   ├── bcbb_map_22jun22_v3.1_nonpii_val.RData
+    │   │   ├── bcbb_map_codebook_22jun22_v3.1_nonpii.pdf
+    │   │   └── bcbb_map_codebook_appendix_22jun22_v3.1_nonpii.pdf
+    │   ├── PEGS_survey_data_README.txt
+    │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │   └── Surveys
+    │       ├── Exposome
+    │       │   ├── Exposome_A_Survey_Paper_v3.1_nonpii.pdf
+    │       │   ├── Exposome_B_Survey_Paper_v3.1_nonpii.pdf
+    │       │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │       │   ├── exposomea_29jul22_v3.1_nonpii_val.RData
+    │       │   ├── exposomea_codebook_29jul22_v3.1_nonpii.pdf
+    │       │   ├── exposomea_codebook_appendix_29jul22_v3.1_nonpii.pdf
+    │       │   ├── exposomeb_29jul22_v3.1_nonpii_val.RData
+    │       │   ├── exposomeb_codebook_29jul22_v3.1_nonpii.pdf
+    │       │   └── exposomeb_codebook_appendix_29jul22_v3.1_nonpii.pdf
+    │       ├── Health_and_Exposure
+    │       │   ├── EPR_Health_and_Exposure_Survey_Version2_v3.1_nonpii.pdf
+    │       │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │       │   ├── healthexposure_16jun22_v3.1_nonpii_val.RData
+    │       │   ├── healthexposure_codebook_16jun22_v3.1_nonpii.pdf
+    │       │   └── healthexposure_codebook_appendix_16jun22_v3.1_nonpii.pdf
+    │       └── SYNAPSE_METADATA_MANIFEST.tsv
+    ├── PEGS_genomic_data
+    │   ├── HLA_genotypes
+    │   │   ├── PEGS_HLA-A_genotypes_val.txt
+    │   │   ├── PEGS_HLA-B_genotypes_val.txt
+    │   │   ├── PEGS_HLA-C_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DMA_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DMB_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DOA_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DOB_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DPA1_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DPB1_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DQA1_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DQB1_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DRA_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DRB1_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DRB3_genotypes_val.txt
+    │   │   ├── PEGS_HLA-DRB5_genotypes_val.txt
+    │   │   ├── PEGS_HLA-F_genotypes_val.txt
+    │   │   ├── PEGS_HLA-G_genotypes_val.txt
+    │   │   ├── PEGS_HLA-H_genotypes_val.txt
+    │   │   ├── PEGS_HLA-J_genotypes_val.txt
+    │   │   ├── PEGS_HLA-L_genotypes_val.txt
+    │   │   ├── PEGS_HLA_genotypes_README.txt
+    │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+    │   ├── PEGS_genomic_data_README.txt
+    │   ├── SNVs_small_indels
+    │   │   ├── PEGS_GWAS_genotypes_v1.1_val.bed
+    │   │   ├── PEGS_GWAS_genotypes_v1.1_val.bim
+    │   │   ├── PEGS_GWAS_genotypes_v1.1_val.fam
+    │   │   ├── PEGS_SNV_small_indel_README.txt
+    │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+    │   ├── SYNAPSE_METADATA_MANIFEST.tsv
+    │   ├── local_ancestry
+    │   │   ├── PEGS_Estimated_Ancestry_Fractions_val.xlsx
+    │   │   ├── PEGS_local_ancestry_README.txt
+    │   │   ├── PEGS_local_ancestry_chr10_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr11_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr12_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr13_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr14_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr15_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr16_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr17_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr18_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr19_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr1_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr20_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr21_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr22_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr2_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr3_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr4_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr5_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr6_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr7_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr8_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chr9_val.msp.tsv
+    │   │   ├── PEGS_local_ancestry_chrX_val.msp.tsv
+    │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+    │   ├── methylation
+    │   │   ├── MethylationEPIC_v-1-0_B2.csv
+    │   │   ├── PEGS_methylation_README.txt
+    │   │   ├── PEGS_methylation_beta_val.rds
+    │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+    │   ├── structural_variants
+    │   │   ├── PEGS_SV_README.txt
+    │   │   ├── PEGS_SV_genotypes_val.vcf.gz
+    │   │   ├── PEGS_SV_genotypes_val.vcf.gz.tbi
+    │   │   └── SYNAPSE_METADATA_MANIFEST.tsv
+    │   └── telomere_content
+    │       ├── PEGS_telomere_content_README.txt
+    │       ├── PEGS_telomere_content_estimates_val.xlsx
+    │       └── SYNAPSE_METADATA_MANIFEST.tsv
+    └── SYNAPSE_METADATA_MANIFEST.tsv
+
+39 directories, 223 files
