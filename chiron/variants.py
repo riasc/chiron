@@ -1,26 +1,23 @@
 import os
 from pathlib import Path
-from plinkio import plinkfile
 import pandas as pd
 import numpy as np
 from bed_reader import open_bed, sample_file
 
-import pdb
-
 class PolygenicScore:
     def __init__(self, options, snvfile):
         pgs_scoringfile = options.ref / Path("PGS000936.txt")
-        self.pgs_catalog = self.parse_pgs_scoringfile(pgs_scoringfile)
-        #self.variants = self.parse_snvs(snvfile)
+#        self.pgs_catalog = self.parse_pgs_scoringfile(pgs_scoringfile)
+#        self.variants = self.parse_snvs(snvfile)
         # self.calculate_pgs(self.variants)
 
-    def parse_pgs_scoringfile(self, scoringfile):
-        try:
-            pgs_catalog = pd.read_csv(scoringfile, sep="\t", comment="#")
-            return pgs_catalog
-        except Exception as e:
-            print(f"Error reading the PGS scoring file: {e}")
-            return None
+    # def parse_pgs_scoringfile(self, scoringfile):
+    #     try:
+    #         pgs_catalog = pd.read_csv(scoringfile, sep="\t", comment="#")
+    #         return pgs_catalog
+    #     except Exception as e:
+    #         print(f"Error reading the PGS scoring file: {e}")
+    #         return None
 
     # def parse_snvs(self, snvs):
     #     print(snvs)
