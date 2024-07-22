@@ -1,3 +1,4 @@
-python chiron/main.py --input /Users/sej9799/Documents/projects/chiron/data/train_data_synthetic/ \
---type train \
---output /Users/sej9799/Documents/projects/chiron/output
+python chiron/main.py --input /Users/sej9799/Documents/projects/chiron/data/ \
+--synthetic \
+--output /Users/sej9799/Documents/projects/chiron/output \
+--ref /Users/sej9799/Documents/projects/chiron/ref/
