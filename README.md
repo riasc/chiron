@@ -138,13 +138,7 @@ We inspected the `health and exposure` data and for a number of preselected colu
 | he_s187_alcohol_life_PARQ | 31 |
 | he_s192_sleep_hours | 84 |
 
-Although this dataset is only synthetic data, we excluded the columns
-
-
-
-
-
-
+Although this dataset is only synthetic data, we excluded columns with more than 20% of missing data (N=3062)  `he_f046a_hep_a_CHILDQ`, `he_f046b_hep_b_CHILDQ`, `he_f046c_hep_c_CHILDQ`, `he_s180_smoke_PARQ_CHILDQ`.
 
 
 # Output
