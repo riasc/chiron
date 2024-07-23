@@ -4,6 +4,9 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from sklearn.model_selection import GridSearchCV
 import numpy as np
 import pandas as pd
+from skopt import BayesSearchCV
+from skopt.space import Real, Integer
+
 
 
 class Model:
@@ -27,29 +30,53 @@ class Model:
 
 
     def train(self):
-        # tune hyperparameters
-        param_grid = {
-            'learning_rate': [0.1, 0.2, 0.3],
-            'max_depth': [3, 4, 5],
-            'n_estimators': [100, 200, 300]
+        search_space = {
+            "learning_rate": Real(0.01, 0.5, prior="log-uniform"),
+            "max_depth": Integer(1,10),
+            "n_estimators": Integer(100, 500)
         }
 
-        # grid search
-        grid_search = GridSearchCV(estimator=XGBClassifier(),
-            param_grid=param_grid,
+        # Bayesian Optimization
+        bayes_search = BayesSearchCV(
+            estimator=XGBClassifier(),
+            search_spaces=search_space,
+            n_iter=50,
             cv=5,
-            scoring='accuracy')
+            scoring='accuracy',
+            random_state=42
+        )
 
-        # fit the grid search
-        grid_search.fit(self.X_train, self.Y_train)
+        bayes_search.fit(self.X_train, self.Y_train)
 
-        # best parameters
-        self.best_params = grid_search.best_params_
-        self.best_score = grid_search.best_score_
-        self.best_model = grid_search.best_estimator_
+        # best parameters and score
+        self.best_params = bayes_search.best_params_
+        self.best_score = bayes_search.best_score_
+        self.best_model = bayes_search.best_estimator_
 
         print(f"Best parameters: {self.best_params}")
         print(f"Best score: {self.best_score:.2f}")
+
+        # # tune hyperparameters
+        # param_grid = {
+        #     'learning_rate': [0.1, 0.2, 0.3],
+        #     'max_depth': [3, 4, 5],
+        #     'n_estimators': [100, 200, 300]
+        # }
+
+        # # grid search
+        # grid_search = GridSearchCV(estimator=XGBClassifier(),
+        #     param_grid=param_grid,
+        #     cv=5,
+        #     scoring='accuracy')
+
+        # # fit the grid search
+        # grid_search.fit(self.X_train, self.Y_train)
+
+        # # best parameters
+        # self.best_params = grid_search.best_params_
+        # self.best_score = grid_search.best_score_
+        # self.best_model = grid_search.best_estimator_
+
 
     def predict(self, features):
         if self.best_model:
