@@ -18,7 +18,7 @@ We looked at the 'train_data_synthetic/ and inspected the data
 
 ## Survey
 
-We inspected the `health and exposure` data and for a number of preselected columns, we looked at the number of missing (`.M`) or skipped (`.S`) values.
+We only used the `health and exposure` data for the training. The main reason for that is that `exposomeA` and `exposomeB` only contain about a third of the samples. At first, we looked at the number of missing (`.M`) or skipped (`.S`) values. Consequently, we excluded that have more than 20% missing values. The following table shows the number of missing/skipped values for each (used) column:
 
 | column name | number of missing/skipped values |
 | ------------| ---------------------------------|
@@ -60,9 +60,6 @@ We inspected the `health and exposure` data and for a number of preselected colu
 | he_f044_cirrhosis | 54 |
 | he_f045_fatty_liver | 45 |
 | he_f046_hepatitis_PARQ | 55 |
-| he_f046a_hep_a_CHILDQ | 2989 |
-| he_f046b_hep_b_CHILDQ | 2977 |
-| he_f046c_hep_c_CHILDQ | 2987 |
 | he_g047_ckd | 49 |
 | he_g048_esrd | 43 |
 | he_g049_kidney_stones | 40 |
@@ -133,13 +130,9 @@ We inspected the `health and exposure` data and for a number of preselected colu
 | he_r177b_emphysema_dad | 0 |
 | he_r178a_parkinsons_mom | 0 |
 | he_r178b_parkinsons_dad | 0 |
-| he_s180_smoke_PARQ_CHILDQ | 1769 |
 | he_s185_smoke_indoors | 116 |
 | he_s187_alcohol_life_PARQ | 31 |
 | he_s192_sleep_hours | 84 |
-
-Although this dataset is only synthetic data, we excluded columns with more than 20% of missing data (N=3062)  `he_f046a_hep_a_CHILDQ`, `he_f046b_hep_b_CHILDQ`, `he_f046c_hep_c_CHILDQ`, `he_s180_smoke_PARQ_CHILDQ`.
-
 
 # Output
 
