@@ -92,36 +92,101 @@ class HealthAndExposure:
         cats.append("he_q153_textiles_PARQ")
         cats.append("he_q154_wood_dust_PARQ")
         cats.append("he_q155_xrays_PARQ")
-        cats.append("he_r166a_diabetes_mom")
-        cats.append("he_r166b_diabetes_dad")
-        cats.append("he_r167a_hbp_mom")
-        cats.append("he_r167b_hbp_dad")
-        cats.append("he_r168a_stroke_mom")
-        cats.append("he_r168b_stroke_dad")
-        cats.append("he_r169a_heart_attack_mom")
-        cats.append("he_r169b_heart_attack_dad")
-        cats.append("he_r170a_coronary_artery_mom")
-        cats.append("he_r170b_coronary_artery_dad")
-        cats.append("he_r171a_sickle_cell_mom")
-        cats.append("he_r171b_sickle_cell_dad")
-        cats.append("he_r172a_rheu_arthritis_mom")
-        cats.append("he_r172b_rheu_arthritis_dad")
-        cats.append("he_r173a_alzheimers_mom")
-        cats.append("he_r173b_alzheimers_dad")
-        cats.append("he_r174a_asthma_mom")
-        cats.append("he_r174b_asthma_dad")
-        cats.append("he_r175a_autism_mom")
-        cats.append("he_r175b_autism_dad")
-        cats.append("he_r176a_hayfever_mom")
-        cats.append("he_r176b_hayfever_dad")
-        cats.append("he_r177a_emphysema_mom")
-        cats.append("he_r177b_emphysema_dad")
-        cats.append("he_r178a_parkinsons_mom")
-        cats.append("he_r178b_parkinsons_dad")
         cats.append("he_s185_smoke_indoors")
         cats.append("he_s187_alcohol_life_PARQ")
         cats.append("he_s192_sleep_hours")
-        if type == "train": # only available for training data
-            cats.append("he_b008_high_cholesterol") # ever diagnosed with high cholesterol
+        # if type == "train": # only available for training data
+        #     cats.append("he_b008_high_cholesterol") # ever diagnosed with high cholesterol
 
-        return df[cats]
+        selected = df[cats]
+
+        # cancer family history
+        selected = pd.merge(selected, self.cancer_family_history(df))
+
+        # combine family history - retrieve and merge for different diseases
+        selected = pd.merge(selected, self.combine_family_history("he", "166", "diabetes", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "167", "hbp", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "168", "stroke", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "169", "heart_attack", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "170", "coronary_artery", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "171", "sickle_cell", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "172", "rheu_arthritis", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "173", "alzheimers", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "174", "asthma", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "175", "autism", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "176", "hayfever", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "177", "emphysema", df), on="epr_number")
+        selected = pd.merge(selected, self.combine_family_history("he", "178", "parkinsons", df), on="epr_number")
+
+        if type == "train":
+            target = pd.DataFrame()
+            target["epr_number"] = df["epr_number"]
+            target["he_b008_high_cholesterol"] = df["he_b008_high_cholesterol"]
+            selected = pd.merge(selected, target, on="epr_number")
+
+        return selected
+
+    def parse_expoa_rdata(self, rdatafile, type):
+        converted = rdata.read_rda(str(rdatafile))
+        df = next(iter(converted.values()))
+
+        # extract
+        cats = []
+        cats.append("epr_number")
+        cats.append("ea_a018_fireplace")
+        cats.append("ea_a022_ac")
+
+
+    def cancer_family_history(self, df):
+        """ Combine family history of cancer """
+        df_cancer = pd.DataFrame()
+        df_cancer["epr_number"] = df["epr_number"]
+
+        cancer_mapping = [
+            ("156", "breast_cancer", 1),
+            ("157", "colon_cancer", 2),
+            ("158", "leukemia", 3),
+            ("159", "lung_cancer", 4),
+            ("160", "lymphoma", 5),
+            ("161", "prostate_cancer", 6),
+            ("162", "ovarian_cancer", 7),
+            ("163", "melanoma", 8),
+            ("164", "skin", 9),
+            ("165", "cancer_other", 10)
+        ]
+
+        cancer_cols = []
+        for cancer in cancer_mapping:
+            # combine the family history of different cancer types in one dataframe
+            df_cancer = pd.merge(df_cancer, self.combine_family_history("he", cancer[0], cancer[1], df), on="epr_number")
+            cancer_cols.append(f"he_r{cancer[0]}_{cancer[1]}_fam")
+        df_cancer["he_156-165_cancer_fam"] = df_cancer[cancer_cols].max(axis=1)
+
+        return df_cancer
+
+    def combine_family_history(self, survey, number, diagnosis, df):
+        """ Combine parental history into one column """
+        mom = f"{survey}_r{number}a_{diagnosis}_mom"
+        dad = f"{survey}_r{number}b_{diagnosis}_dad"
+        bro = f"{survey}_r{number}c_{diagnosis}_bro_PARQ"
+        sis = f"{survey}_r{number}d_{diagnosis}_sis_PARQ"
+
+        if diagnosis == "prostate_cancer":
+            all = [dad, bro]
+        elif diagnosis == "ovarian_cancer":
+            all = [mom, sis]
+        else:
+            all = [mom, dad, bro, sis]
+
+        fam_df = pd.DataFrame()
+        fam_df["epr_number"] = df["epr_number"]
+        for col in all:
+            fam_df[col] = pd.to_numeric(df[col], errors='coerce')
+
+        fam_col = f"{survey}_r{number}_{diagnosis}_fam"
+        fam_df[fam_col] = fam_df[all].max(axis=1)
+
+        # drop the individual columns
+        fam_df.drop(columns=all, inplace=True)
+
+        return fam_df
