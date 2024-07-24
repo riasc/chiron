@@ -1,11 +1,12 @@
 from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 import numpy as np
 import pandas as pd
-from skopt import BayesSearchCV
-from skopt.space import Real, Integer
+# from skopt import BayesSearchCV
+# from skopt.space import Real, Integer
+import optuna
 
 
 
@@ -28,33 +29,73 @@ class Model:
 
         self.best_model = None
 
-
-    def train(self):
-        search_space = {
-            "learning_rate": Real(0.01, 0.5, prior="log-uniform"),
-            "max_depth": Integer(1,10),
-            "n_estimators": Integer(100, 500)
+    def objective(self, trial):
+        params = {
+            "objective": "binary:logistic",
+            "eval_metric": "auc",
+            "booster": "gbtree",
+            "lambda": trial.suggest_float("lambda", 1e-3, 1.0),
+            "alpha": trial.suggest_float("alpha", 1e-3, 1.0),
+            "subsample": trial.suggest_float("subsample", 0.4, 1.0),
+            "colsample_bytree": trial.suggest_float("colsample_bytree", 0.4, 1.0),
+            "max_depth": trial.suggest_int("max_depth", 3, 15),
+            "eta": trial.suggest_float("eta", 1e-3, 1.0),
+            "n_estimators": trial.suggest_int("n_estimators", 100, 2000),
+            "gamma": trial.suggest_float("gamma", 1e-3, 5),
+            "min_child_weight": trial.suggest_int("min_child_weight", 1, 20),
+            "scale_pos_weight": trial.suggest_float("scale_pos_weight", 1, 20),
+            "max_bin": trial.suggest_int("max_bin", 10, 500),
+            "grow_policy": trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"])
         }
 
-        # Bayesian Optimization
-        bayes_search = BayesSearchCV(
-            estimator=XGBClassifier(),
-            search_spaces=search_space,
-            n_iter=50,
-            cv=5,
-            scoring='accuracy',
-            random_state=42
-        )
+        model = XGBClassifier(**params)
+        model.fit(self.X_train, self.Y_train)
+        preds = model.predict(self.X_test)
+        # accuracy = accuracy_score(self.Y_test, preds)
+        # return accuracy
+        auc = roc_auc_score(self.Y_test, preds)
+        return auc
 
-        bayes_search.fit(self.X_train, self.Y_train)
 
-        # best parameters and score
-        self.best_params = bayes_search.best_params_
-        self.best_score = bayes_search.best_score_
-        self.best_model = bayes_search.best_estimator_
+    def train(self):
+        study = optuna.create_study(direction="maximize")
+        study.optimize(self.objective, n_trials=1000)
+
+        self.best_params = study.best_params
+        self.best_score = study.best_value
+        self.best_model = XGBClassifier(**self.best_params)
+        self.best_model.fit(self.X_train, self.Y_train)
 
         print(f"Best parameters: {self.best_params}")
         print(f"Best score: {self.best_score:.2f}")
+
+        # search_space = {
+        #     "learning_rate": Real(0.01, 0.5, prior="log-uniform"),
+        #     "max_depth": Integer(1,10),
+        #     "n_estimators": Integer(100, 500)
+        # }
+
+        # # Bayesian Optimization
+        # bayes_search = BayesSearchCV(
+        #     estimator=XGBClassifier(),
+        #     search_spaces=search_space,
+        #     n_iter=50,
+        #     cv=5,
+        #     scoring='accuracy',
+        #     random_state=42
+        # )
+
+
+
+        # bayes_search.fit(self.X_train, self.Y_train)
+
+        # # best parameters and score
+        # self.best_params = bayes_search.best_params_
+        # self.best_score = bayes_search.best_score_
+        # self.best_model = bayes_search.best_estimator_
+
+        # print(f"Best parameters: {self.best_params}")
+        # print(f"Best score: {self.best_score:.2f}")
 
         # # tune hyperparameters
         # param_grid = {

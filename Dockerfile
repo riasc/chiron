@@ -16,6 +16,7 @@ RUN pip3 install bed-reader
 RUN pip3 install xgboost
 RUN pip3 install scikit-learn
 RUN pip3 install scikit-optimize
+RUN pip3 install optuna
 RUN pip3 install pdbpp
 RUN pip3 install configargparse
 
