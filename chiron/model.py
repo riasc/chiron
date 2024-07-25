@@ -1,4 +1,6 @@
 from xgboost import XGBClassifier
+import xgboost as xgb
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
 from sklearn.model_selection import GridSearchCV
@@ -7,6 +9,7 @@ import pandas as pd
 # from skopt import BayesSearchCV
 # from skopt.space import Real, Integer
 import optuna
+
 
 
 
@@ -40,7 +43,7 @@ class Model:
             "colsample_bytree": trial.suggest_float("colsample_bytree", 0.4, 1.0),
             "max_depth": trial.suggest_int("max_depth", 3, 15),
             "eta": trial.suggest_float("eta", 1e-3, 1.0),
-            "n_estimators": trial.suggest_int("n_estimators", 100, 2000),
+#            "n_estimators": trial.suggest_int("n_estimators", 100, 2000),
             "gamma": trial.suggest_float("gamma", 1e-3, 5),
             "min_child_weight": trial.suggest_int("min_child_weight", 1, 20),
             "scale_pos_weight": trial.suggest_float("scale_pos_weight", 1, 20),
@@ -48,13 +51,23 @@ class Model:
             "grow_policy": trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"])
         }
 
-        model = XGBClassifier(**params)
-        model.fit(self.X_train, self.Y_train)
-        preds = model.predict(self.X_test)
-        # accuracy = accuracy_score(self.Y_test, preds)
-        # return accuracy
-        auc = roc_auc_score(self.Y_test, preds)
+        # Convert to DMatrix with enable_categorical
+        dtrain = xgb.DMatrix(self.X_train, label=self.Y_train, enable_categorical=True)
+        dtest = xgb.DMatrix(self.X_test, label=self.Y_test, enable_categorical=True)
+
+        model = xgb.train(params, dtrain, num_boost_round=100)
+        preds_proba = model.predict(dtest)
+        auc = roc_auc_score(self.Y_test, preds_proba)
         return auc
+
+
+        # model = XGBClassifier(**params)
+        # model.fit(self.X_train, self.Y_train)
+        # preds = model.predict(self.X_test)
+        # # accuracy = accuracy_score(self.Y_test, preds)
+        # # return accuracy
+        # auc = roc_auc_score(self.Y_test, preds)
+        # return auc
 
 
     def train(self):
@@ -63,8 +76,14 @@ class Model:
 
         self.best_params = study.best_params
         self.best_score = study.best_value
-        self.best_model = XGBClassifier(**self.best_params)
-        self.best_model.fit(self.X_train, self.Y_train)
+
+        # Train the final model with the best parameters
+        dtrain = xgb.DMatrix(self.X_train, label=self.Y_train, enable_categorical=True)
+        self.best_model = xgb.train(self.best_params, dtrain, num_boost_round=100)
+
+
+        # self.best_model = XGBClassifier(**self.best_params)
+        # self.best_model.fit(self.X_train, self.Y_train)
 
         print(f"Best parameters: {self.best_params}")
         print(f"Best score: {self.best_score:.2f}")
@@ -121,6 +140,7 @@ class Model:
 
     def predict(self, features):
         if self.best_model:
-            return self.best_model.predict_proba(features)
+            dtest = xgb.DMatrix(features, enable_categorical=True)
+            return self.best_model.predict(dtest)
         else:
             raise Exception("Model not trained yet")
