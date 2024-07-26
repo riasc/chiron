@@ -9,120 +9,132 @@ class HealthAndExposure:
         converted = rdata.read_rda(str(rdatafile))
         df = next(iter(converted.values())) # convert into dataframe
 
-        # extract fields
-        cats = []
-        cats.append("epr_number")
-        cats.append("he_age_derived") # age (while answering the survey)
-        cats.append("he_bmi_cat_derived")
-        cats.append("he_a005_physical_health")
-        cats.append("he_b007_hypertension_PARQ") # ever diagnosed with hypertension
-        cats.append("he_b009_atherosclerosis")
-        cats.append("he_b010_cardiac_arrhythmia")
-        cats.append("he_b012_heart_attack")
-        cats.append("he_b013_coronary_artery")
-        cats.append("he_b014_congestive_heart_failure")
-        cats.append("he_b015_poor_blood_flow")
-        cats.append("he_b016_raynauds")
-        cats.append("he_b017_blood_clots")
-        cats.append("he_b018_angioplasty")
-        cats.append("he_b019_stroke_mini")
-        cats.append("he_b020_stroke_PARQ")
-        cats.append("he_c022_diabetes_PARQ")
-        cats.append("he_c023_thyroid_disease_PARQ")
-        cats.append("he_d027_tb_PARQ")
-        cats.append("he_d028_cough_breathlessness")
-        cats.append("he_d030_asthma_PARQ")
-        cats.append("he_e031_epilepsy")
-        cats.append("he_e032_migraine")
-        cats.append("he_e033_parkinsons")
-        cats.append("he_e034_ptsd")
-        cats.append("he_e035_alzheimers")
-        cats.append("he_e036_ms")
-        cats.append("he_f037_celiac")
-        cats.append("he_f038_lactose_intolerance")
-        cats.append("he_f039_crohns")
-        cats.append("he_f040_ulcerative_colitis")
-        cats.append("he_f041_polyps")
-        cats.append("he_f042_gallbladder_disease")
-        cats.append("he_f043_stomach_ulcer")
-        cats.append("he_f044_cirrhosis")
-        cats.append("he_f045_fatty_liver")
-        cats.append("he_f046_hepatitis_PARQ")
-        cats.append("he_g047_ckd")
-        cats.append("he_g048_esrd")
-        cats.append("he_g049_kidney_stones")
-        cats.append("he_g050_kidney_infection")
-        cats.append("he_g051_pkd")
-        cats.append("he_h052_allergic_reactions")
-        cats.append("he_h053_scleroderma")
-        cats.append("he_h054_shingles")
-        cats.append("he_h055_fibromyalgia")
-        cats.append("he_h056_lupus")
-        cats.append("he_h057_sjogrens")
-        cats.append("he_i058_hemochromatosis")
-        cats.append("he_i059_iron_anemia")
-        cats.append("he_i060_pernicious_anemia")
-        cats.append("he_i061_sickle_cell")
-        cats.append("he_j062_bone_loss")
-        cats.append("he_j063_osteoporosis")
-        cats.append("he_j064_gout")
-        cats.append("he_j065_myositis")
-        cats.append("he_j066_rheu_arthritis_PARQ")
-        cats.append("he_j067_osteoarthritis_PARQ")
-        cats.append("he_k069_psoriasis")
-        cats.append("he_k070_eczema")
-        cats.append("he_k071_urticaria")
-        cats.append("he_k072_sunburn")
-        cats.append("he_k073_scars")
-        cats.append("he_l080_chronic_fatigue")
-        cats.append("he_o103_cancer_PARQ")
-        cats.append("he_q140_asbestos_PARQ")
-        cats.append("he_q141_biohazards_PARQ")
-        cats.append("he_q142_chemicals_PARQ")
-        cats.append("he_q143_coal_dust_PARQ")
-        cats.append("he_q144_coal_tar_PARQ")
-        cats.append("he_q145_diesel_PARQ")
-        cats.append("he_q146_dyes_PARQ")
-        cats.append("he_q147_formaldehyde_PARQ")
-        cats.append("he_q148_gasoline_PARQ")
-        cats.append("he_q149_heavy_metals_PARQ")
-        cats.append("he_q150_pesticide_PARQ")
-        cats.append("he_q151_sand_PARQ")
-        cats.append("he_q152_other_dust_PARQ")
-        cats.append("he_q153_textiles_PARQ")
-        cats.append("he_q154_wood_dust_PARQ")
-        cats.append("he_q155_xrays_PARQ")
-        cats.append("he_s185_smoke_indoors")
-        cats.append("he_s187_alcohol_life_PARQ")
-        cats.append("he_s192_sleep_hours")
-        # if type == "train": # only available for training data
-        #     cats.append("he_b008_high_cholesterol") # ever diagnosed with high cholesterol
+        conts = [
+            "he_age_derived", # age (while answering the survey)
+            "he_s192_sleep_hours"
+        ]
 
-        selected = df[cats]
+        cats = [
+            "he_bmi_cat_derived",
+            "he_a005_physical_health",
+            "he_b007_hypertension_PARQ", # ever diagnosed with hypertension
+            "he_b009_atherosclerosis",
+            "he_b010_cardiac_arrhythmia",
+            "he_b012_heart_attack",
+            "he_b013_coronary_artery",
+            "he_b014_congestive_heart_failure",
+            "he_b015_poor_blood_flow",
+            "he_b016_raynauds",
+            "he_b017_blood_clots",
+            "he_b018_angioplasty",
+            "he_b019_stroke_mini",
+            "he_b020_stroke_PARQ",
+            "he_c022_diabetes_PARQ",
+            "he_c023_thyroid_disease_PARQ",
+            "he_d027_tb_PARQ",
+            "he_d028_cough_breathlessness",
+            "he_d030_asthma_PARQ",
+            "he_e031_epilepsy",
+            "he_e032_migraine",
+            "he_e033_parkinsons",
+            "he_e034_ptsd",
+            "he_e035_alzheimers",
+            "he_e036_ms",
+            "he_f037_celiac",
+            "he_f038_lactose_intolerance",
+            "he_f039_crohns",
+            "he_f040_ulcerative_colitis",
+            "he_f041_polyps",
+            "he_f042_gallbladder_disease",
+            "he_f043_stomach_ulcer",
+            "he_f044_cirrhosis",
+            "he_f045_fatty_liver",
+            "he_f046_hepatitis_PARQ",
+            "he_g047_ckd",
+            "he_g048_esrd",
+            "he_g049_kidney_stones",
+            "he_g050_kidney_infection",
+            "he_g051_pkd",
+            "he_h052_allergic_reactions",
+            "he_h053_scleroderma",
+            "he_h054_shingles",
+            "he_h055_fibromyalgia",
+            "he_h056_lupus",
+            "he_h057_sjogrens",
+            "he_i058_hemochromatosis",
+            "he_i059_iron_anemia",
+            "he_i060_pernicious_anemia",
+            "he_i061_sickle_cell",
+            "he_j062_bone_loss",
+            "he_j063_osteoporosis",
+            "he_j064_gout",
+            "he_j065_myositis",
+            "he_j066_rheu_arthritis_PARQ",
+            "he_j067_osteoarthritis_PARQ",
+            "he_k069_psoriasis",
+            "he_k070_eczema",
+            "he_k071_urticaria",
+            "he_k072_sunburn",
+            "he_k073_scars",
+            "he_l080_chronic_fatigue",
+            "he_o103_cancer_PARQ",
+            "he_q140_asbestos_PARQ",
+            "he_q141_biohazards_PARQ",
+            "he_q142_chemicals_PARQ",
+            "he_q143_coal_dust_PARQ",
+            "he_q144_coal_tar_PARQ",
+            "he_q145_diesel_PARQ",
+            "he_q146_dyes_PARQ",
+            "he_q147_formaldehyde_PARQ",
+            "he_q148_gasoline_PARQ",
+            "he_q149_heavy_metals_PARQ",
+            "he_q150_pesticide_PARQ",
+            "he_q151_sand_PARQ",
+            "he_q152_other_dust_PARQ",
+            "he_q153_textiles_PARQ",
+            "he_q154_wood_dust_PARQ",
+            "he_q155_xrays_PARQ",
+            "he_s185_smoke_indoors",
+            "he_s187_alcohol_life_PARQ"
+        ]
+
+        selected = df[["epr_number"] + conts + cats]
 
         # cancer family history
         selected = pd.merge(selected, self.cancer_family_history(df))
+        cats.append("he_156-165_cancer_fam")
+
+        diagnosis = [
+            ("166", "diabetes"),
+            ("167", "hbp"),
+            ("168", "stroke"),
+            ("169", "heart_attack"),
+            ("170", "coronary_artery"),
+            ("171", "sickle_cell"),
+            ("172", "rheu_arthritis"),
+            ("173", "alzheimers"),
+            ("174", "asthma"),
+            ("175", "autism"),
+            ("176", "hayfever"),
+            ("177", "emphysema"),
+            ("178", "parkinsons")
+        ]
 
         # combine family history - retrieve and merge for different diseases
-        selected = pd.merge(selected, self.combine_family_history("he", "166", "diabetes", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "167", "hbp", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "168", "stroke", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "169", "heart_attack", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "170", "coronary_artery", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "171", "sickle_cell", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "172", "rheu_arthritis", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "173", "alzheimers", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "174", "asthma", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "175", "autism", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "176", "hayfever", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "177", "emphysema", df), on="epr_number")
-        selected = pd.merge(selected, self.combine_family_history("he", "178", "parkinsons", df), on="epr_number")
+        for code, disease in diagnosis:
+            selected = pd.merge(selected, self.combine_family_history("he", code, disease, df), on="epr_number")
+            cats.append(f"he_r{code}_{disease}_fam")
 
         if type == "train":
             target = pd.DataFrame()
             target["epr_number"] = df["epr_number"]
             target["he_b008_high_cholesterol"] = df["he_b008_high_cholesterol"]
             selected = pd.merge(selected, target, on="epr_number")
+            cats.append("he_b008_high_cholesterol")
+
+        # categorize
+        for col in cats:
+            selected[col] = selected[col].astype("category")
 
         return selected
 
@@ -135,6 +147,11 @@ class HealthAndExposure:
         cats.append("epr_number")
         cats.append("ea_a018_fireplace")
         cats.append("ea_a022_ac")
+        cats.append("ea_a040_mold_d")
+        cats.append("ea_a046_carpet")
+        cats.append("ea_a058_pet")
+        cats.append("ea_a067_animal_waste")
+
 
 
     def cancer_family_history(self, df):

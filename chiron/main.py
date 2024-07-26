@@ -23,7 +23,10 @@ def main():
     hedata_train.rdata.drop(columns=['epr_number'], inplace=True)
     # merge data into one final data.frame
     df = hedata_train.rdata
-    df.replace(['.M','.S'], np.nan, inplace=True)
+    cats_cols = df.select_dtypes(["category"]).columns # get the categorical columns
+    df[cats_cols] = df[cats_cols].astype(str) # convert to string
+    df.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
+    df[cats_cols] = df[cats_cols].astype("category") # convert to back to category
     df = df.map(pd.to_numeric, errors='coerce')
 
     # load and train the model
@@ -32,13 +35,17 @@ def main():
 
     hedata_val = surveys.HealthAndExposure(dfiles.he_survey["val"], "val")
     df_val = hedata_val.rdata
+    cats_cols = df_val.select_dtypes(["category"]).columns
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers
+    df_val[cats_cols] = df_val[cats_cols].astype(str)
     df_val.replace(['.M','.S'], np.nan, inplace=True)
+    df_val = df_val.astype("category")
     df_val = df_val.map(pd.to_numeric, errors='coerce')
 
     # predict probabilities
-    prediction = xgboost.predict(df_val)[:,1]
-    # create dataframe for output
+    prediction = xgboost.predict(df_val)
+
+    #create dataframe for output
     df_out = pd.DataFrame({
         "epr_number": epr_numbers,
         "disease_probability": prediction
