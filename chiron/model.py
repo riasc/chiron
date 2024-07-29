@@ -6,29 +6,29 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from sklearn.model_selection import GridSearchCV
 import numpy as np
 import pandas as pd
-# from skopt import BayesSearchCV
-# from skopt.space import Real, Integer
+from skopt import BayesSearchCV
+from skopt.space import Real, Integer
 import optuna
-
-
-
 
 class Model:
     def __init__(self, df):
         # convert target to numeric (forcing errors to NaN)
-        df[df.columns[-1]] = pd.to_numeric(df[df.columns[-1]], errors='coerce')
+        df["he_b008_high_cholesterol"] = pd.to_numeric(df["he_b008_high_cholesterol"], errors='coerce')
         # drop rows were target is NaN
-        df = df.dropna(subset=[df.columns[-1]])
+        df = df.dropna(subset=["he_b008_high_cholesterol"])
 
         # separate features and target
-        self.X = df.drop(df.columns[-1], axis=1)
-        self.Y = df[df.columns[-1]]
+        self.X = df.drop("he_b008_high_cholesterol", axis=1)
+        self.Y = df["he_b008_high_cholesterol"]
 
         # split the data (into training/testing) - 80/20
         self.X_train, self.X_test, self.Y_train, self.Y_test = train_test_split(self.X,
                                                                                 self.Y,
                                                                                 test_size=0.2,
                                                                                 random_state=42)
+
+        # self.X_train = xgb.DMatrix(self.X_train, label=self.Y_train, enable_categorical=True)
+        # self.X_test = xgb.DMatrix(self.X_test, label=self.Y_test, enable_categorical=True)
 
         self.best_model = None
 
@@ -37,28 +37,58 @@ class Model:
             "objective": "binary:logistic",
             "eval_metric": "auc",
             "booster": "gbtree",
-            "lambda": trial.suggest_float("lambda", 1e-3, 1.0),
-            "alpha": trial.suggest_float("alpha", 1e-3, 1.0),
+            "lambda": trial.suggest_float("lambda", 1e-3, 1.0, log=True),
+            "alpha": trial.suggest_float("alpha", 1e-3, 1.0, log=True),
             "subsample": trial.suggest_float("subsample", 0.4, 1.0),
             "colsample_bytree": trial.suggest_float("colsample_bytree", 0.4, 1.0),
             "max_depth": trial.suggest_int("max_depth", 3, 15),
-            "eta": trial.suggest_float("eta", 1e-3, 1.0),
-#            "n_estimators": trial.suggest_int("n_estimators", 100, 2000),
-            "gamma": trial.suggest_float("gamma", 1e-3, 5),
+            "eta": trial.suggest_float("eta", 1e-3, 1.0, log=True),
+            "gamma": trial.suggest_float("gamma", 1e-3, 5, log=True),
             "min_child_weight": trial.suggest_int("min_child_weight", 1, 20),
             "scale_pos_weight": trial.suggest_float("scale_pos_weight", 1, 20),
             "max_bin": trial.suggest_int("max_bin", 10, 500),
-            "grow_policy": trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"])
+            "grow_policy": trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"]),
         }
 
-        # Convert to DMatrix with enable_categorical
-        dtrain = xgb.DMatrix(self.X_train, label=self.Y_train, enable_categorical=True)
-        dtest = xgb.DMatrix(self.X_test, label=self.Y_test, enable_categorical=True)
+        model = XGBClassifier(**params, use_label_encoder=False)
+        model.fit(self.X_train, self.Y_train)
+        preds = model.predict(self.X_test)
 
-        model = xgb.train(params, dtrain, num_boost_round=100)
-        preds_proba = model.predict(dtest)
-        auc = roc_auc_score(self.Y_test, preds_proba)
-        return auc
+
+
+
+
+
+#     def objective(self, trial):
+#         params = {
+#             "objective": "binary:logistic",
+#             "eval_metric": "auc",
+#             "booster": "gbtree",
+#             "lambda": trial.suggest_float("lambda", 1e-3, 1.0),
+#             "alpha": trial.suggest_float("alpha", 1e-3, 1.0),
+#             "subsample": trial.suggest_float("subsample", 0.4, 1.0),
+#             "colsample_bytree": trial.suggest_float("colsample_bytree", 0.4, 1.0),
+#             "max_depth": trial.suggest_int("max_depth", 3, 15),
+#             "eta": trial.suggest_float("eta", 1e-3, 1.0),
+# #            "n_estimators": trial.suggest_int("n_estimators", 100, 2000),
+#             "gamma": trial.suggest_float("gamma", 1e-3, 5),
+#             "min_child_weight": trial.suggest_int("min_child_weight", 1, 20),
+#             "scale_pos_weight": trial.suggest_float("scale_pos_weight", 1, 20),
+#             "max_bin": trial.suggest_int("max_bin", 10, 500),
+#             "grow_policy": trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"]),
+#         }
+
+#         # Convert to DMatrix with enable_categorical
+#         # dtrain = xgb.DMatrix(self.X_train, label=self.Y_train, enable_categorical=True)
+#         # dtest = xgb.DMatrix(self.X_test, label=self.Y_test, enable_categorical=True)
+
+#         # model = xgb.train(params, dtrain, num_boost_round=100)
+#         # preds_proba = model.predict(dtest)
+#         model = XGBClassifier(**params)
+#         model.fit(self.X_train, self.Y_train)
+#         preds = model.predict(self.X_test)
+#         auc = roc_auc_score(self.Y_test, preds)
+#         return auc
 
 
         # model = XGBClassifier(**params)
@@ -71,50 +101,50 @@ class Model:
 
 
     def train(self):
-        study = optuna.create_study(direction="maximize")
-        study.optimize(self.objective, n_trials=1000)
+        # study = optuna.create_study(direction="maximize")
+        # study.optimize(self.objective, n_trials=1000)
 
-        self.best_params = study.best_params
-        self.best_score = study.best_value
+        # self.best_params = study.best_params
+        # self.best_score = study.best_value
 
-        # Train the final model with the best parameters
-        dtrain = xgb.DMatrix(self.X_train, label=self.Y_train, enable_categorical=True)
-        self.best_model = xgb.train(self.best_params, dtrain, num_boost_round=100)
+        # # xgb.config_context(verbosity=0)
+
+        # # Train the final model with the best parameters
+        # # dtrain = xgb.DMatrix(self.X_train, label=self.Y_train, enable_categorical=True)
+        # # self.best_model = xgb.train(self.best_params, dtrain, num_boost_round=100)
 
 
         # self.best_model = XGBClassifier(**self.best_params)
         # self.best_model.fit(self.X_train, self.Y_train)
 
-        print(f"Best parameters: {self.best_params}")
-        print(f"Best score: {self.best_score:.2f}")
-
-        # search_space = {
-        #     "learning_rate": Real(0.01, 0.5, prior="log-uniform"),
-        #     "max_depth": Integer(1,10),
-        #     "n_estimators": Integer(100, 500)
-        # }
-
-        # # Bayesian Optimization
-        # bayes_search = BayesSearchCV(
-        #     estimator=XGBClassifier(),
-        #     search_spaces=search_space,
-        #     n_iter=50,
-        #     cv=5,
-        #     scoring='accuracy',
-        #     random_state=42
-        # )
-
-
-
-        # bayes_search.fit(self.X_train, self.Y_train)
-
-        # # best parameters and score
-        # self.best_params = bayes_search.best_params_
-        # self.best_score = bayes_search.best_score_
-        # self.best_model = bayes_search.best_estimator_
-
         # print(f"Best parameters: {self.best_params}")
         # print(f"Best score: {self.best_score:.2f}")
+
+        search_space = {
+            "learning_rate": Real(0.01, 0.5, prior="log-uniform"),
+            "max_depth": Integer(1,10),
+            "n_estimators": Integer(100, 500)
+        }
+
+        # Bayesian Optimization
+        bayes_search = BayesSearchCV(
+            estimator=XGBClassifier(),
+            search_spaces=search_space,
+            n_iter=50,
+            cv=5,
+            scoring="roc_auc",
+            random_state=42
+        )
+
+        bayes_search.fit(self.X_train, self.Y_train)
+
+        # best parameters and score
+        self.best_params = bayes_search.best_params_
+        self.best_score = bayes_search.best_score_
+        self.best_model = bayes_search.best_estimator_
+
+        print(f"Best parameters: {self.best_params}")
+        print(f"Best score: {self.best_score:.2f}")
 
         # # tune hyperparameters
         # param_grid = {
@@ -140,7 +170,7 @@ class Model:
 
     def predict(self, features):
         if self.best_model:
-            dtest = xgb.DMatrix(features, enable_categorical=True)
-            return self.best_model.predict(dtest)
+#            dtest = xgb.DMatrix(features, enable_categorical=True)
+            return self.best_model.predict_proba(features)[:,1]
         else:
             raise Exception("Model not trained yet")
