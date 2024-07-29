@@ -6,6 +6,14 @@ class DataFiles:
         self.he_survey["train"] = self.get_he_surveyfile(input, "train", synthetic)
         self.he_survey["val"] = self.get_he_surveyfile(input, "val", synthetic)
 
+        self.expoa_survey = {}
+        self.expoa_survey["train"] = self.get_expoa_surveyfile(input, "train", synthetic)
+        self.expoa_survey["val"] = self.get_expoa_surveyfile(input, "val", synthetic)
+
+        self.expob_survey = {}
+        self.expob_survey["train"] = self.get_expob_surveyfile(input, "train", synthetic)
+        self.expob_survey["val"] = self.get_expob_surveyfile(input, "val", synthetic)
+
         self.sv_data = {} # structural variant data
         self.sv_data["train"] = self.get_sv_datafile(input, "train", synthetic)
         self.sv_data["val"] = self.get_sv_datafile(input, "val", synthetic)
@@ -24,6 +32,28 @@ class DataFiles:
             return surveypath / Path("healthexposure_16jun22_v3.1_nonpii_" + type + "_synthetic.RData")
         else:
             return surveypath / Path("healthexposure_16jun22_v3.1_nonpii_" + type + ".RData")
+
+    def get_expoa_surveyfile(self, input, type, synthetic):
+        if synthetic:
+            data = Path(input) / Path(type + "_data_synthetic")
+        else:
+            data = Path(input) / Path(type + "_data")
+        surveypath = data / Path("PEGS_freeze_v3.1_nonpii") / Path("Surveys") / Path("Exposome")
+        if synthetic:
+            return surveypath / Path("exposomea_29jul22_v3.1_nonpii_" + type + "_synthetic.RData")
+        else:
+            return surveypath / Path("exposomea_29jul22_v3.1_nonpii_" + type + ".RData")
+
+    def get_expob_surveyfile(self, input, type, synthetic):
+        if synthetic:
+            data = Path(input) / Path(type + "_data_synthetic")
+        else:
+            data = Path(input) / Path(type + "_data")
+        surveypath = data / Path("PEGS_freeze_v3.1_nonpii") / Path("Surveys") / Path("Exposome")
+        if synthetic:
+            return surveypath / Path("exposomeb_29jul22_v3.1_nonpii_" + type + "_synthetic.RData")
+        else:
+            return surveypath / Path("exposomeb_29jul22_v3.1_nonpii_" + type + ".RData")
 
     def get_sv_datafile(self, input, type, synthetic):
         if synthetic:
