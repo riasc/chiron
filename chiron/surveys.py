@@ -217,8 +217,10 @@ class Exposome:
         return selected
 
     def parse_expob_rdata(self, rdatafile, type):
-        converted = rdata.read_rda(str(rdatafile))
-        df = next(iter(converted.values()))
+        parsed_data = rdata.parser.parse_file(str(rdatafile))
+        converted = rdata.conversion.convert(parsed_data)
+
+        df = next(iter(converted.values())) # convert into dataframe
 
         # extract
         cats = [
