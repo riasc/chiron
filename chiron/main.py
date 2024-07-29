@@ -18,32 +18,42 @@ def main():
 
     dfiles = general.DataFiles(options.input, options.synthetic)
     hedata_train = surveys.HealthAndExposure(dfiles.he_survey["train"], "train")
+    eadata_train = surveys.Exposome(dfiles.expoa_survey["train"], "train", "exposome_a")
+    #ebdata_train = surveys.Exposome(dfiles.expob_survey["train"], "train", "exposome_b")
 
+    # merge the surveys
+    df_train = pd.merge(hedata_train.rdata, eadata_train.rdata, on="epr_number", how="outer")
+#    df_train = hedata_train.rdata
+    df_train.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     # in training data remove epr_number
-    hedata_train.rdata.drop(columns=['epr_number'], inplace=True)
+    df_train.drop(columns=['epr_number'], inplace=True)
+
     # merge data into one final data.frame
-    df = hedata_train.rdata
-    cats_cols = df.select_dtypes(["category"]).columns # get the categorical columns
-    df[cats_cols] = df[cats_cols].astype(str) # convert to string
-    df.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
-    df[cats_cols] = df[cats_cols].astype("category") # convert to back to category
-    df = df.map(pd.to_numeric, errors='coerce')
+#    df = hedata_train.rdata
+    # cats_cols = df.select_dtypes(["category"]).columns # get the categorical columns
+    # df[cats_cols] = df[cats_cols].astype(str) # convert to string
+#    df.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
+    # df[cats_cols] = df[cats_cols].astype("category") # convert to back to category
+    df_train = df_train.map(pd.to_numeric, errors='coerce')
+    df_train.replace(-888888, np.nan, inplace=True)
 
     # load and train the model
-    xgboost = model.Model(df)
-    xgboost.train()
+    gradboost = model.Model(df_train)
+    gradboost.train()
+    # xgboost.train()
 
     hedata_val = surveys.HealthAndExposure(dfiles.he_survey["val"], "val")
-    df_val = hedata_val.rdata
-    cats_cols = df_val.select_dtypes(["category"]).columns
+    eadata_val = surveys.Exposome(dfiles.expoa_survey["val"], "val", "exposome_a")
+    #ebdata_val = surveys.Exposome(dfiles.expob_survey["val"], "val", "exposome_b")
+    # merge
+    df_val = pd.merge(hedata_val.rdata, eadata_val.rdata, on="epr_number", how="outer")
+    #df_val = hedata_val.rdata
+    df_val.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers
-    df_val[cats_cols] = df_val[cats_cols].astype(str)
-    df_val.replace(['.M','.S'], np.nan, inplace=True)
-    df_val = df_val.astype("category")
     df_val = df_val.map(pd.to_numeric, errors='coerce')
 
     # predict probabilities
-    prediction = xgboost.predict(df_val)
+    prediction = gradboost.predict(df_val)
 
     #create dataframe for output
     df_out = pd.DataFrame({
@@ -53,7 +63,6 @@ def main():
     # save output
     output_path = Path(options.output) / Path("predictions.csv")
     df_out.to_csv(output_path, index=False)
-
 
 def folder_exists(folder):
     path = Path(folder)
