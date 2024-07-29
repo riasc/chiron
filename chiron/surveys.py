@@ -133,26 +133,10 @@ class HealthAndExposure:
             cats.append("he_b008_high_cholesterol")
 
         # categorize
-        for col in cats:
-            selected[col] = selected[col].astype("category")
+        # for col in cats:
+        #     selected[col] = selected[col].astype("category")
 
         return selected
-
-    def parse_expoa_rdata(self, rdatafile, type):
-        converted = rdata.read_rda(str(rdatafile))
-        df = next(iter(converted.values()))
-
-        # extract
-        cats = []
-        cats.append("epr_number")
-        cats.append("ea_a018_fireplace")
-        cats.append("ea_a022_ac")
-        cats.append("ea_a040_mold_d")
-        cats.append("ea_a046_carpet")
-        cats.append("ea_a058_pet")
-        cats.append("ea_a067_animal_waste")
-
-
 
     def cancer_family_history(self, df):
         """ Combine family history of cancer """
@@ -207,3 +191,42 @@ class HealthAndExposure:
         fam_df.drop(columns=all, inplace=True)
 
         return fam_df
+
+class Exposome:
+    def __init__(self, filename, type, expo):
+        if expo == "exposome_a":
+            self.rdata = self.parse_expoa_rdata(filename, type)
+        elif expo == "exposome_b":
+            self.rdata = self.parse_expob_rdata(filename, type)
+
+    def parse_expoa_rdata(self, rdatafile, type):
+        converted = rdata.read_rda(str(rdatafile))
+        df = next(iter(converted.values())) # convert into dataframe
+
+        # extract
+        cats = [
+            "ea_a018_fireplace_PARQ",
+            "ea_a022_ac_PARQ",
+            "ea_a040_mold_derived",
+            "ea_a046_carpet_PARQ",
+            "ea_a058_pet_PARQ",
+            "ea_a067_animal_waste"
+        ]
+
+        selected = df[["epr_number"] + cats]
+        return selected
+
+    def parse_expob_rdata(self, rdatafile, type):
+        converted = rdata.read_rda(str(rdatafile))
+        df = next(iter(converted.values()))
+
+        # extract
+        cats = [
+            "eb_a019_fish_oil_PARQ",
+            "eb_a020_flaxseed_oil_PARQ",
+            "eb_a021_folic_acid_PARQ",
+            "eb_a022_gingko_biloba_PARQ"
+        ]
+
+        selected = df[["epr_number"] + cats]
+        return selected
