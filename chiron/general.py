@@ -73,6 +73,17 @@ class DataFiles:
             data = Path(input) / Path(type + "_data")
         snvpath = data / Path("PEGS_genomic_data") / Path("SNVs_small_indels")
         if synthetic:
-            return snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + "_synthetic.bed")
+            data = {
+                "bed": snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + "_synthetic.bed"),
+                "bim": snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + "_synthetic.bim"),
+                "fam": snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + "_synthetic.fam")
+            }
+            return data
         else:
-            return snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + ".bed")
+            data = []
+            data = {
+                "bed": snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + ".bed"),
+                "bim": snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + ".bim"),
+                "fam": snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + ".fam")
+            }
+            return data
