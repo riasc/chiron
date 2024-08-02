@@ -12,10 +12,11 @@ RUN apt-get install -y python3-dev build-essential python3-pip python3-setuptool
 RUN pip3 install rdata
 RUN pip3 install pandas
 RUN pip3 install numpy
-RUN pip3 install bed-reader
 RUN pip3 install xgboost
 RUN pip3 install scikit-learn
 RUN pip3 install scikit-optimize
+RUN pip3 install shap
+RUN pip3 install matplotlib
 RUN pip3 install optuna
 RUN pip3 install pdbpp
 RUN pip3 install configargparse
