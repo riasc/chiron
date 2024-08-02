@@ -20,6 +20,7 @@ def main():
     hedata_train = surveys.HealthAndExposure(dfiles.he_survey["train"], "train")
     eadata_train = surveys.Exposome(dfiles.expoa_survey["train"], "train", "exposome_a")
     #ebdata_train = surveys.Exposome(dfiles.expob_survey["train"], "train", "exposome_b")
+    snvsdata_train = variants.SNVs(dfiles.snvs_data["train"], "train", options.ref, options.threads)
 
     # merge the surveys
     df_train = pd.merge(hedata_train.rdata, eadata_train.rdata, on="epr_number", how="outer")
@@ -40,6 +41,13 @@ def main():
     # load and train the model
     gradboost = model.Model(df_train)
     gradboost.train()
+
+    if options.synthetic:
+        gradboost.explain()
+
+
+
+
     # xgboost.train()
 
     hedata_val = surveys.HealthAndExposure(dfiles.he_survey["val"], "val")
@@ -75,7 +83,8 @@ def parse_arguments():
     p.add_argument("-i", "--input", help="Survey files", required=True)
     p.add_argument("-s", "--synthetic", action="store_true", default=False, help="Use of synthetic data", required=False)
     p.add_argument("-o", "--output", help="Output file", required=True)
-    #p.add_argument("-r", "--ref", help="Folder with reference files", required=True)
+    p.add_argument("-r", "--ref", help="Folder with reference files", required=True)
+    p.add_argument("-t", "--threads", help="Number of threads", required=False, default=1, type=int)
     return p.parse_args()
 
 main()
