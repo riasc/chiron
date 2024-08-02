@@ -1,7 +1,34 @@
 # chiron
-Predict hypercholesterolemia
+Predict hypercholesterolemia from the Personalized Environment and Genes Study
 
-# Usage
+# DREAM Challenge
+
+This has been part of the [PEGS DREAM Challenge](https://www.synapse.org/Synapse:syn52817032/wiki/624336).
+
+## Team - The312
+
+Official Synapse Team Project Page: [The312](https://www.synapse.org/Synapse:syn61682977/wiki/629098)
+
+- [Richard A. Schäfer](https://www.synapse.org/Profile:3348050)
+- [Fikrat Talibli](https://www.synapse.org/Profile:3509170)
+
+## Usage
+
+In the challenge the data was mounted on `/input` and the output was supposed to be written to `/output` in an output file called `predictions.csv` with the following format:
+
+| Column Name | Column type | Description |
+| ----------- | ----------- | ----------- |
+| `epr_number` | str | EPR number | Sample/Participant IDs must be unique and match with those in the input files; there must be one prediction per sample ID or participant ID for PEGS participants. |
+| `disease_probability` | float | All probabilities must be a number between 0 (indicating no likelihood of the disease) and 1 (indicating 100% likelihood of having the disease); null/NaN values are not accepted |
+
+
+
+
+
+
+
+
+
 
 In the challenge data is mounted on /input
 
@@ -135,8 +162,3 @@ We only used the `health and exposure` data for the training. The main reason fo
 | he_s192_sleep_hours | 84 |
 
 # Output
-
-| Column Name | Column type | Description |
-| ----------- | ----------- | ----------- |
-| `epr_number` | str | EPR number | Sample/Participant IDs must be unique and match with those in the input files; there must be one prediction per sample ID or participant ID for PEGS participants. |
-| `disease_probability` | float | All probabilities must be a number between 0 (indicating no likelihood of the disease) and 1 (indicating 100% likelihood of having the disease); null/NaN values are not accepted |
