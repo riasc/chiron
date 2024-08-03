@@ -19,6 +19,7 @@ RUN pip3 install shap
 RUN pip3 install matplotlib
 RUN pip3 install optuna
 RUN pip3 install pdbpp
+RUN pip3 install pysnptools
 RUN pip3 install configargparse
 
 WORKDIR /usr/local/bin
