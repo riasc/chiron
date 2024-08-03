@@ -23,10 +23,12 @@ def main():
     #ebdata_train = surveys.Exposome(dfiles.expob_survey["train"], "train", "exposome_b")
     snvsdata_train = variants.SNVs(dfiles.snvs_data["train"], "train", options.ref, options.threads)
     telomere_train = genomics.Telomere(dfiles.telomere_data["train"], "train")
+    ancestry_train = genomics.Ancestry(dfiles.ancestry_data["train"], "train")
 
     # merge into one data.frame
     df_train = pd.merge(hedata_train.rdata, snvsdata_train.pgs_df, on="epr_number", how="outer")
     df_train = pd.merge(df_train, telomere_train.data, on="epr_number", how="outer")
+    df_train = pd.merge(df_train, ancestry_train.data, on="epr_number", how="outer")
 
 #    df_train = hedata_train.rdata
     df_train.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
@@ -52,11 +54,13 @@ def main():
     hedata_val = surveys.HealthAndExposure(dfiles.he_survey["val"], "val")
     eadata_val = surveys.Exposome(dfiles.expoa_survey["val"], "val", "exposome_a")
     snvsdata_val = variants.SNVs(dfiles.snvs_data["val"], "val", options.ref, options.threads)
-    telomere_train = genomics.Telomere(dfiles.telomere_data["val"], "val")
+    telomere_val = genomics.Telomere(dfiles.telomere_data["val"], "val")
+    ancestry_val = genomics.Ancestry(dfiles.ancestry_data["val"], "val")
 
     # merge into one data.frame
     df_val = pd.merge(hedata_val.rdata, snvsdata_val.pgs_df, on="epr_number", how="outer")
-    df_val = pd.merge(df_val, telomere_train.data, on="epr_number", how="outer")
+    df_val = pd.merge(df_val, telomere_val.data, on="epr_number", how="outer")
+    df_val = pd.merge(df_val, ancestry_val.data, on="epr_number", how="outer")
 
     df_val.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers
