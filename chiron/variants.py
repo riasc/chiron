@@ -7,8 +7,6 @@ from pysnptools.snpreader import Bed
 from concurrent.futures import ThreadPoolExecutor
 import threading
 
-import pdb
-
 class SNVs:
     def __init__(self, bedfile, type, refdir, threads):
         # parse scoring file
