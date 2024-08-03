@@ -1,18 +1,29 @@
 # chiron
 Predict hypercholesterolemia from the Personalized Environment and Genes Study
 
-# DREAM Challenge
+## DREAM Challenge
 
 This has been part of the [PEGS DREAM Challenge](https://www.synapse.org/Synapse:syn52817032/wiki/624336).
 
-## Team - The312
+### Team - The312
 
 Official Synapse Team Project Page: [The312](https://www.synapse.org/Synapse:syn61682977/wiki/629098)
 
 - [Richard A. Schäfer](https://www.synapse.org/Profile:3348050)
 - [Fikrat Talibli](https://www.synapse.org/Profile:3509170)
 
-## Usage
+### Usage
+
+usage: main.py [-h] -i INPUT [-s] -o OUTPUT
+
+options:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Survey files
+  -s, --synthetic       Use of synthetic data
+  -o OUTPUT, --output OUTPUT
+                        Output file
+
 
 In the challenge the data was mounted on `/input` and the output was supposed to be written to `/output` in an output file called `predictions.csv` with the following format:
 
@@ -21,23 +32,13 @@ In the challenge the data was mounted on `/input` and the output was supposed to
 | `epr_number` | str | EPR number | Sample/Participant IDs must be unique and match with those in the input files; there must be one prediction per sample ID or participant ID for PEGS participants. |
 | `disease_probability` | float | All probabilities must be a number between 0 (indicating no likelihood of the disease) and 1 (indicating 100% likelihood of having the disease); null/NaN values are not accepted |
 
-
-
-
-
-
-
-
-
-
-In the challenge data is mounted on /input
+For that reason, we used the following ENTRYPONT in the [Dockerfile](Dockerfile):
 
 ```
-SYNAPSE_METADATA_MANIFEST.tsv
-train_data
-val_data
+ENTRYPOINT [ "python3", "/chiron/main.py", "--input", "/input", "--output", "/output" ]
 ```
 
+## Data
 
 # Training Data
 
