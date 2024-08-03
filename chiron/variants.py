@@ -53,14 +53,11 @@ class SNVs:
             # extract genotypes for each sample
             for sample_idx, (fid, iid) in enumerate(sample_ids):
                 gt = genotypes[sample_idx]
-                if fid not in self.pgs:
-                    self.pgs[fid] = 0.0
-
-                # print(gt[0] * weight)
-                #
+                if int(fid) not in self.pgs:
+                    self.pgs[int(fid)] = 0.0
 
                 if not np.isnan(gt[0]):
-                    self.pgs[fid] += gt[0] * weight
+                    self.pgs[int(fid)] += gt[0] * weight
 
     def parse_pgs_catalog(self, scoringfile):
         self.pgs_catalog = {}
