@@ -22,8 +22,10 @@ def main():
     #ebdata_train = surveys.Exposome(dfiles.expob_survey["train"], "train", "exposome_b")
     snvsdata_train = variants.SNVs(dfiles.snvs_data["train"], "train", options.ref, options.threads)
 
-    # merge the surveys
-    df_train = pd.merge(hedata_train.rdata, eadata_train.rdata, on="epr_number", how="outer")
+    df_train = pd.merge(hedata_train.rdata, snvsdata_train.pgs_df, on="epr_number", how="outer")
+
+
+
 #    df_train = hedata_train.rdata
     df_train.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     # in training data remove epr_number
@@ -42,20 +44,16 @@ def main():
     gradboost = model.Model(df_train)
     gradboost.train()
 
-    if options.synthetic:
+    if options.explain:
         gradboost.explain()
-
-
-
-
-    # xgboost.train()
 
     hedata_val = surveys.HealthAndExposure(dfiles.he_survey["val"], "val")
     eadata_val = surveys.Exposome(dfiles.expoa_survey["val"], "val", "exposome_a")
-    #ebdata_val = surveys.Exposome(dfiles.expob_survey["val"], "val", "exposome_b")
-    # merge
-    df_val = pd.merge(hedata_val.rdata, eadata_val.rdata, on="epr_number", how="outer")
-    #df_val = hedata_val.rdata
+    snvsdata_val = variants.SNVs(dfiles.snvs_data["val"], "val", options.ref, options.threads)
+
+    # merge into one data.frame
+    df_val = pd.merge(hedata_val.rdata, snvsdata_val.pgs_df, on="epr_number", how="outer")
+
     df_val.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers
     df_val = df_val.map(pd.to_numeric, errors='coerce')
@@ -84,6 +82,7 @@ def parse_arguments():
     p.add_argument("-s", "--synthetic", action="store_true", default=False, help="Use of synthetic data", required=False)
     p.add_argument("-o", "--output", help="Output file", required=True)
     p.add_argument("-r", "--ref", help="Folder with reference files", required=True)
+    p.add_argument("-e", "--explain", action="store_true", help="Explain the model", required=False)
     p.add_argument("-t", "--threads", help="Number of threads", required=False, default=1, type=int)
     return p.parse_args()
 
