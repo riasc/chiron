@@ -23,6 +23,7 @@ RUN pip3 install configargparse
 
 WORKDIR /usr/local/bin
 ADD chiron /chiron
+ADD ref /ref
 RUN chmod +x /chiron/main.py
 
-ENTRYPOINT [ "python3", "/chiron/main.py", "--input", "/input", "--output", "/output" ]
+ENTRYPOINT [ "python3", "/chiron/main.py", "--input", "/input", "--output", "/output", "--ref", "/ref"]
