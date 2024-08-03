@@ -22,6 +22,10 @@ class DataFiles:
         self.snvs_data["train"] = self.get_snvs_bedfile(input, "train", synthetic)
         self.snvs_data["val"] = self.get_snvs_bedfile(input, "val", synthetic)
 
+        self.telomere_data = {} # telomere data
+        self.telomere_data["train"] = self.get_telomere_datafile(input, "train", synthetic)
+        self.telomere_data["val"] = self.get_telomere_datafile(input, "val", synthetic)
+
     def get_he_surveyfile(self, input, type, synthetic):
         if synthetic:
             data = Path(input) / Path(type + "_data_synthetic")
@@ -76,3 +80,14 @@ class DataFiles:
             return snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + "_synthetic.bed")
         else:
             return snvpath / Path("PEGS_GWAS_genotypes_v1.1_" + type + ".bed")
+
+    def get_telomere_datafile(self, input, type, synthetic):
+        if synthetic:
+            data = Path(input) / Path(type + "_data_synthetic")
+        else:
+            data = Path(input) / Path(type + "_data")
+        telomerepath = data / Path("PEGS_genomic_data") / Path("telomere_content")
+        if synthetic:
+            return telomerepath / Path("PEGS_telomere_content_estimates_" + type + "_synthetic.xlsx")
+        else:
+            return telomerepath / Path("PEGS_telomere_content_estimates_" + type + ".xlsx")
