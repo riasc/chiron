@@ -9,6 +9,8 @@ import pandas as pd
 from skopt import BayesSearchCV
 from skopt.space import Real, Integer
 import optuna
+import shap
+import matplotlib.pyplot as plt
 
 class Model:
     def __init__(self, df):
@@ -37,10 +39,7 @@ class Model:
             "objective": "binary:logistic",
             "eval_metric": "auc",
             "booster": "gbtree",
-            "lambda": trial.suggest_float("lambda", 1e-3, 1.0, log=True),
-            "alpha": trial.suggest_float("alpha", 1e-3, 1.0, log=True),
-            "subsample": trial.suggest_float("subsample", 0.4, 1.0),
-            "colsample_bytree": trial.suggest_float("colsample_bytree", 0.4, 1.0),
+            "lambda": trial.suggest_float("lambda", 1e-3, 1.0, log=True), "alpha": trial.suggest_float("alpha", 1e-3, 1.0, log=True), "subsample": trial.suggest_float("subsample", 0.4, 1.0), "colsample_bytree": trial.suggest_float("colsample_bytree", 0.4, 1.0),
             "max_depth": trial.suggest_int("max_depth", 3, 15),
             "eta": trial.suggest_float("eta", 1e-3, 1.0, log=True),
             "gamma": trial.suggest_float("gamma", 1e-3, 5, log=True),
@@ -54,7 +53,64 @@ class Model:
         model.fit(self.X_train, self.Y_train)
         preds = model.predict(self.X_test)
 
+    def train(self):
 
+        search_space = {
+            "learning_rate": Real(0.01, 0.5, prior="log-uniform"),
+            "max_depth": Integer(1,10),
+            "n_estimators": Integer(100, 500)
+        }
+
+        # Bayesian Optimization
+        bayes_search = BayesSearchCV(
+            estimator=XGBClassifier(),
+            search_spaces=search_space,
+            n_iter=50,
+            cv=5,
+            scoring="roc_auc",
+            random_state=42
+        )
+
+        bayes_search.fit(self.X_train, self.Y_train)
+
+        # best parameters and score
+        self.best_params = bayes_search.best_params_
+        self.best_score = bayes_search.best_score_
+        self.best_model = bayes_search.best_estimator_
+
+        print(f"Best parameters: {self.best_params}")
+        print(f"Best score: {self.best_score:.2f}")
+
+
+
+    def predict(self, features):
+        if self.best_model:
+#            dtest = xgb.DMatrix(features, enable_categorical=True)
+            return self.best_model.predict_proba(features)[:,1]
+        else:
+            raise Exception("Model not trained yet")
+
+    def explain(self):
+        if self.best_model:
+            explainer = shap.Explainer(self.best_model, self.X_train)
+            shap_values = explainer(self.X_test)
+
+            # shap.summary_plot(shap_values, self.X_test, max_display=50)
+            # shap.plots.waterfall(shap_values[0])
+
+             # Create and save summary plot
+            plt.figure(figsize=(12, 8))
+            shap.summary_plot(shap_values, self.X_test, max_display=50, show=False)
+            plt.tight_layout()
+            plt.savefig('shap_summary_plot.png', dpi=300, bbox_inches='tight')
+            plt.close()
+
+                    # Create and save waterfall plot
+            plt.figure(figsize=(12, 8))
+            shap.plots.waterfall(shap_values[0], show=False)
+            plt.tight_layout()
+            plt.savefig('shap_waterfall_plot.png', dpi=300, bbox_inches='tight')
+            plt.close()
 
 
 
@@ -100,52 +156,6 @@ class Model:
         # return auc
 
 
-    def train(self):
-        # study = optuna.create_study(direction="maximize")
-        # study.optimize(self.objective, n_trials=1000)
-
-        # self.best_params = study.best_params
-        # self.best_score = study.best_value
-
-        # # xgb.config_context(verbosity=0)
-
-        # # Train the final model with the best parameters
-        # # dtrain = xgb.DMatrix(self.X_train, label=self.Y_train, enable_categorical=True)
-        # # self.best_model = xgb.train(self.best_params, dtrain, num_boost_round=100)
-
-
-        # self.best_model = XGBClassifier(**self.best_params)
-        # self.best_model.fit(self.X_train, self.Y_train)
-
-        # print(f"Best parameters: {self.best_params}")
-        # print(f"Best score: {self.best_score:.2f}")
-
-        search_space = {
-            "learning_rate": Real(0.01, 0.5, prior="log-uniform"),
-            "max_depth": Integer(1,10),
-            "n_estimators": Integer(100, 500)
-        }
-
-        # Bayesian Optimization
-        bayes_search = BayesSearchCV(
-            estimator=XGBClassifier(),
-            search_spaces=search_space,
-            n_iter=50,
-            cv=5,
-            scoring="roc_auc",
-            random_state=42
-        )
-
-        bayes_search.fit(self.X_train, self.Y_train)
-
-        # best parameters and score
-        self.best_params = bayes_search.best_params_
-        self.best_score = bayes_search.best_score_
-        self.best_model = bayes_search.best_estimator_
-
-        print(f"Best parameters: {self.best_params}")
-        print(f"Best score: {self.best_score:.2f}")
-
         # # tune hyperparameters
         # param_grid = {
         #     'learning_rate': [0.1, 0.2, 0.3],
@@ -168,9 +178,22 @@ class Model:
         # self.best_model = grid_search.best_estimator_
 
 
-    def predict(self, features):
-        if self.best_model:
-#            dtest = xgb.DMatrix(features, enable_categorical=True)
-            return self.best_model.predict_proba(features)[:,1]
-        else:
-            raise Exception("Model not trained yet")
+
+        # study = optuna.create_study(direction="maximize")
+        # study.optimize(self.objective, n_trials=1000)
+
+        # self.best_params = study.best_params
+        # self.best_score = study.best_value
+
+        # # xgb.config_context(verbosity=0)
+
+        # # Train the final model with the best parameters
+        # # dtrain = xgb.DMatrix(self.X_train, label=self.Y_train, enable_categorical=True)
+        # # self.best_model = xgb.train(self.best_params, dtrain, num_boost_round=100)
+
+
+        # self.best_model = XGBClassifier(**self.best_params)
+        # self.best_model.fit(self.X_train, self.Y_train)
+
+        # print(f"Best parameters: {self.best_params}")
+        # print(f"Best score: {self.best_score:.2f}")
