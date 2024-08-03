@@ -1,4 +1,5 @@
 python chiron/main.py --input /Users/sej9799/Documents/projects/chiron/data/ \
---synthetic \
+--synthetic --explain \
 --output /Users/sej9799/Documents/projects/chiron/output \
---ref /Users/sej9799/Documents/projects/chiron/ref/
+--ref /Users/sej9799/Documents/projects/chiron/ref \
+--threads 4
