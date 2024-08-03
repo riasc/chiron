@@ -37,11 +37,11 @@ class HealthAndExposure:
             "he_e031_epilepsy",
             "he_e032_migraine",
             "he_e033_parkinsons",
-            "he_e034_ptsd",
-            "he_e035_alzheimers",
+            #"he_e034_ptsd",
+            #"he_e035_alzheimers",
             "he_e036_ms",
             "he_f037_celiac",
-            "he_f038_lactose_intolerance",
+           # "he_f038_lactose_intolerance",
             "he_f039_crohns",
             "he_f040_ulcerative_colitis",
             "he_f041_polyps",
@@ -49,15 +49,15 @@ class HealthAndExposure:
             "he_f043_stomach_ulcer",
             "he_f044_cirrhosis",
             "he_f045_fatty_liver",
-            "he_f046_hepatitis_PARQ",
+            #"he_f046_hepatitis_PARQ",
             "he_g047_ckd",
             "he_g048_esrd",
-            "he_g049_kidney_stones",
+            #"he_g049_kidney_stones",
             "he_g050_kidney_infection",
             "he_g051_pkd",
             "he_h052_allergic_reactions",
             "he_h053_scleroderma",
-            "he_h054_shingles",
+           # "he_h054_shingles",
             "he_h055_fibromyalgia",
             "he_h056_lupus",
             "he_h057_sjogrens",
@@ -161,9 +161,12 @@ class HealthAndExposure:
             # combine the family history of different cancer types in one dataframe
             df_cancer = pd.merge(df_cancer, self.combine_family_history("he", cancer[0], cancer[1], df), on="epr_number")
             cancer_cols.append(f"he_r{cancer[0]}_{cancer[1]}_fam")
-        df_cancer["he_156-165_cancer_fam"] = df_cancer[cancer_cols].max(axis=1)
 
-        return df_cancer
+        df_final = pd.DataFrame()
+        df_final["epr_number"] = df["epr_number"]
+        df_final["he_156-165_cancer_fam"] = df_cancer[cancer_cols].max(axis=1)
+
+        return df_final
 
     def combine_family_history(self, survey, number, diagnosis, df):
         """ Combine parental history into one column """
