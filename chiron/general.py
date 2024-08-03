@@ -91,3 +91,14 @@ class DataFiles:
             return telomerepath / Path("PEGS_telomere_content_estimates_" + type + "_synthetic.xlsx")
         else:
             return telomerepath / Path("PEGS_telomere_content_estimates_" + type + ".xlsx")
+
+    def get_ancestry_datafile(self, input, type, synthetic):
+        if synthetic:
+            data = Path(input) / Path(type + "_data_synthetic")
+        else:
+            data = Path(input) / Path(type + "_data")
+        ancestrypath = data / Path("PEGS_genomic_data") / Path("local_ancestry")
+        if synthetic:
+            return ancestrypath / Path("PEGS_Estimated_Ancestry_Fractions_" + type + "_synthetic.xlsx")
+        else:
+            return ancestrypath / Path("PEGS_Estimated_Ancestry_Fractions_" + type + ".xlsx")
