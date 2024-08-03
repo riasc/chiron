@@ -26,6 +26,10 @@ class DataFiles:
         self.telomere_data["train"] = self.get_telomere_datafile(input, "train", synthetic)
         self.telomere_data["val"] = self.get_telomere_datafile(input, "val", synthetic)
 
+        self.ancestry_data = {} # ancestry data
+        self.ancestry_data["train"] = self.get_ancestry_datafile(input, "train", synthetic)
+        self.ancestry_data["val"] = self.get_ancestry_datafile(input, "val", synthetic)
+
     def get_he_surveyfile(self, input, type, synthetic):
         if synthetic:
             data = Path(input) / Path(type + "_data_synthetic")
