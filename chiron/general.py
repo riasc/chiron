@@ -121,13 +121,47 @@ class DataFiles:
             data = {
                 "HLA-A": hlapath / Path("PEGS_HLA-A_genotypes_" + type + "_synthetic.txt"),
                 "HLA-B": hlapath / Path("PEGS_HLA-B_genotypes_" + type + "_synthetic.txt"),
-                "HLA-C": hlapath / Path("PEGS_HLA-C_genotypes_" + type + "_synthetic.txt")
+                "HLA-C": hlapath / Path("PEGS_HLA-C_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DMA": hlapath / Path("PEGS_HLA-DMA_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DMB": hlapath / Path("PEGS_HLA-DMB_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DOA": hlapath / Path("PEGS_HLA-DOA_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DOB": hlapath / Path("PEGS_HLA-DOB_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DPA1": hlapath / Path("PEGS_HLA-DPA1_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DPB1": hlapath / Path("PEGS_HLA-DPB1_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DQA1": hlapath / Path("PEGS_HLA-DQA1_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DQB1": hlapath / Path("PEGS_HLA-DQB1_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DRA": hlapath / Path("PEGS_HLA-DRA_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DRB1": hlapath / Path("PEGS_HLA-DRB1_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DRB3": hlapath / Path("PEGS_HLA-DRB3_genotypes_" + type + "_synthetic.txt"),
+                "HLA-DRB5": hlapath / Path("PEGS_HLA-DRB3_genotypes_" + type + "_synthetic.txt"),
+                "HLA-F": hlapath / Path("PEGS_HLA-F_genotypes_" + type + "_synthetic.txt"),
+                "HLA-G": hlapath / Path("PEGS_HLA-G_genotypes_" + type + "_synthetic.txt"),
+                "HLA-H": hlapath / Path("PEGS_HLA-H_genotypes_" + type + "_synthetic.txt"),
+                "HLA-J": hlapath / Path("PEGS_HLA-J_genotypes_" + type + "_synthetic.txt"),
+                "HLA-L": hlapath / Path("PEGS_HLA-L_genotypes_" + type + "_synthetic.txt")
             }
             return data
         else:
             data = {
                 "HLA-A": hlapath / Path("PEGS_HLA-A_genotypes_" + type + ".txt"),
                 "HLA-B": hlapath / Path("PEGS_HLA-B_genotypes_" + type + ".txt"),
-                "HLA-C": hlapath / Path("PEGS_HLA-C_genotypes_" + type + ".txt")
+                "HLA-C": hlapath / Path("PEGS_HLA-C_genotypes_" + type + ".txt"),
+                "HLA-DMA": hlapath / Path("PEGS_HLA-DMA_genotypes_" + type + ".txt"),
+                "HLA-DMB": hlapath / Path("PEGS_HLA-DMB_genotypes_" + type + ".txt"),
+                "HLA-DOA": hlapath / Path("PEGS_HLA-DOA_genotypes_" + type + ".txt"),
+                "HLA-DOB": hlapath / Path("PEGS_HLA-DOB_genotypes_" + type + ".txt"),
+                "HLA-DPA1": hlapath / Path("PEGS_HLA-DPA1_genotypes_" + type + ".txt"),
+                "HLA-DPB1": hlapath / Path("PEGS_HLA-DPB1_genotypes_" + type + ".txt"),
+                "HLA-DQA1": hlapath / Path("PEGS_HLA-DQA1_genotypes_" + type + ".txt"),
+                "HLA-DQB1": hlapath / Path("PEGS_HLA-DQB1_genotypes_" + type + ".txt"),
+                "HLA-DRA": hlapath / Path("PEGS_HLA-DRA_genotypes_" + type + ".txt"),
+                "HLA-DRB1": hlapath / Path("PEGS_HLA-DRB1_genotypes_" + type + ".txt"),
+                "HLA-DRB3": hlapath / Path("PEGS_HLA-DRB3_genotypes_" + type + ".txt"),
+                "HLA-DRB5": hlapath / Path("PEGS_HLA-DRB3_genotypes_" + type + ".txt"),
+                "HLA-F": hlapath / Path("PEGS_HLA-F_genotypes_" + type + ".txt"),
+                "HLA-G": hlapath / Path("PEGS_HLA-G_genotypes_" + type + ".txt"),
+                "HLA-H": hlapath / Path("PEGS_HLA-H_genotypes_" + type + ".txt"),
+                "HLA-J": hlapath / Path("PEGS_HLA-J_genotypes_" + type + ".txt"),
+                "HLA-L": hlapath / Path("PEGS_HLA-L_genotypes_" + type + ".txt")
             }
             return data
