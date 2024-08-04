@@ -30,6 +30,10 @@ class DataFiles:
         self.ancestry_data["train"] = self.get_ancestry_datafile(input, "train", synthetic)
         self.ancestry_data["val"] = self.get_ancestry_datafile(input, "val", synthetic)
 
+        self.hla_data = {}
+        self.hla_data["train"] = self.get_hla_datafiles(input, "train", synthetic)
+        self.hla_data["val"] = self.get_hla_datafiles(input, "val", synthetic)
+
     def get_he_surveyfile(self, input, type, synthetic):
         if synthetic:
             data = Path(input) / Path(type + "_data_synthetic")
@@ -106,3 +110,24 @@ class DataFiles:
             return ancestrypath / Path("PEGS_Estimated_Ancestry_Fractions_" + type + "_synthetic.xlsx")
         else:
             return ancestrypath / Path("PEGS_Estimated_Ancestry_Fractions_" + type + ".xlsx")
+
+    def get_hla_datafiles(self, input, type, synthetic):
+        if synthetic:
+            data = Path(input) / Path(type + "_data_synthetic")
+        else:
+            data = Path(input) / Path(type + "_data")
+        hlapath = data / Path("PEGS_genomic_data") / Path("HLA_genotypes")
+        if synthetic:
+            data = {
+                "HLA-A": hlapath / Path("PEGS_HLA-A_genotypes_" + type + "_synthetic.txt"),
+                "HLA-B": hlapath / Path("PEGS_HLA-B_genotypes_" + type + "_synthetic.txt"),
+                "HLA-C": hlapath / Path("PEGS_HLA-C_genotypes_" + type + "_synthetic.txt")
+            }
+            return data
+        else:
+            data = {
+                "HLA-A": hlapath / Path("PEGS_HLA-A_genotypes_" + type + ".txt"),
+                "HLA-B": hlapath / Path("PEGS_HLA-B_genotypes_" + type + ".txt"),
+                "HLA-C": hlapath / Path("PEGS_HLA-C_genotypes_" + type + ".txt")
+            }
+            return data
