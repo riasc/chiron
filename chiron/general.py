@@ -34,6 +34,10 @@ class DataFiles:
         self.hla_data["train"] = self.get_hla_datafiles(input, "train", synthetic)
         self.hla_data["val"] = self.get_hla_datafiles(input, "val", synthetic)
 
+        self.meth_data = {}
+        self.meth_data["train"] = self.get_meth_datafiles(input, "train", synthetic)
+        self.meth_data["val"] = self.get_meth_datafiles(input, "val", synthetic)
+
     def get_he_surveyfile(self, input, type, synthetic):
         if synthetic:
             data = Path(input) / Path(type + "_data_synthetic")
