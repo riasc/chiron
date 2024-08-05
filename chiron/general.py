@@ -165,3 +165,14 @@ class DataFiles:
                 "HLA-L": hlapath / Path("PEGS_HLA-L_genotypes_" + type + ".txt")
             }
             return data
+
+    def get_meth_datafiles(self, input, type, synthetic):
+        if synthetic:
+            data = Path(input) / Path(type + "_data_synthetic")
+        else:
+            data = Path(input) / Path(type + "_data")
+        methpath = data / Path("PEGS_genomic_data") / Path("methylation")
+        if synthetic:
+            return methpath / Path("PEGS_methylation_beta_" + type + "_synthetic.txt")
+        else:
+            return methpath / Path("PEGS_methylation_beta_" + type + ".txt")
