@@ -40,6 +40,37 @@ ENTRYPOINT [ "python3", "/chiron/main.py", "--input", "/input", "--output", "/ou
 
 ## Data
 
+We used the `train_data[_synthetic]` and `test_data[_synthetic]` provided by the challenge for
+training and validation, respectively.
+
+## Features
+
+We extracted the following features from the data
+
+### Surveys
+
+We only used the `health and exposure` data for the training. The main reason for that is that `exposomeA`
+and `exposomeB` only contain about a third of the samples. At first, we looked at the number of missing (`.M`)
+or skipped (`.S`) values. Consequently, we excluded that have more than 20% missing values and features that
+are not relevant for high cholesterol.
+
+### Genomic Data
+
+#### SNVs (small indels)
+
+We matched the provided SNVs (e.g., PEGS_genomic_data/SNVs_small_indels/) against the PGS catalog for
+hypercholesterolemia ([ref/PGS.txt](https://github.com/riasc/chiron/blob/main/ref/PGS.txt)) and calculated
+the PGS for each sample. For that, we used the following formula:
+** Polygenic Score (PGS)
+$$PGS = \sum_{i=1}^{n} w_i \cdot g_i$$
+where $w_i$ is the weight for the $i$-th SNP and $g_i =\{0,1,2\}$ is the genotype for the $i$-th SNP. The
+genotype corresponds to the number of reference alleles, 0 (AA), 1 (AB), and 2 (BB).$$
+
+
+#### Telomere Content
+
+We directly used the provided aggregate telomeric content estimates.
+
 # Training Data
 
 We looked at the 'train_data_synthetic/ and inspected the data
