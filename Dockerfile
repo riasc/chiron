@@ -19,7 +19,6 @@ RUN pip3 install scikit-optimize
 RUN pip3 install shap
 RUN pip3 install matplotlib
 RUN pip3 install openpyxl
-RUN pip3 install rpy2
 RUN pip3 install optuna
 RUN pip3 install pdbpp
 RUN pip3 install pysnptools
