@@ -6,6 +6,7 @@ dependencies:
   - python=3.12
   - pip=24.0
   - xgboost
+  - r-base
   - pip:
       - configargparse
       - rdata
