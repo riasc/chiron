@@ -65,7 +65,7 @@ class Model:
         bayes_search = BayesSearchCV(
             estimator=XGBClassifier(),
             search_spaces=search_space,
-            n_iter=50,
+            n_iter=150,
             cv=5,
             scoring="roc_auc",
             random_state=42
