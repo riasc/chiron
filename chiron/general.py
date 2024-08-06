@@ -177,6 +177,6 @@ class DataFiles:
             data = Path(input) / Path(type + "_data")
         methpath = data / Path("PEGS_genomic_data") / Path("methylation")
         if synthetic:
-            return methpath / Path("PEGS_methylation_beta_" + type + "_synthetic.txt")
+            return methpath / Path("PEGS_methylation_beta_" + type + "_synthetic.rds")
         else:
             return methpath / Path("PEGS_methylation_beta_" + type + ".txt")
