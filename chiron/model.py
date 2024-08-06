@@ -12,6 +12,9 @@ from skopt.space import Real, Integer
 import shap
 import matplotlib.pyplot as plt
 
+# classes
+import helper
+
 class Model:
     def __init__(self, df):
         # convert target to numeric (forcing errors to NaN)
@@ -58,7 +61,13 @@ class Model:
         search_space = {
             "learning_rate": Real(0.01, 0.5, prior="log-uniform"),
             "max_depth": Integer(1,10),
-            "n_estimators": Integer(100, 500)
+            "n_estimators": Integer(100, 500),
+            "subsample": Real(0.6, 1.0),
+            "colsample_bytree": Real(0.6, 1.0),
+            "gamma": Real(0, 0.5),
+            "min_child_weight": Integer(1, 10),
+            "reg_alpha": Real(0, 1),
+            "reg_lambda": Real(1, 3)
         }
 
         # Bayesian Optimization
@@ -78,10 +87,8 @@ class Model:
         self.best_score = bayes_search.best_score_
         self.best_model = bayes_search.best_estimator_
 
-        print(f"Best parameters: {self.best_params}")
-        print(f"Best score: {self.best_score:.4f}")
-
-
+        print(f"{helper.get_current_time()} parameters: {self.best_params}")
+        print(f"{helper.get_current_time()} score: {self.best_score:.4f}")
 
     def predict(self, features):
         if self.best_model:

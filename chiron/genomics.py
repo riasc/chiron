@@ -3,9 +3,13 @@ import pandas as pd
 import subprocess
 from pathlib import Path
 
+# classes
+import helper
+
 class Telomere:
     def __init__(self, xlsxfile, type):
         self.data = self.parse_xlsx(xlsxfile, type)
+        print(helper.get_current_time() + "Telomere data parsed. (" + type + ")")
 
     def parse_xlsx(self, xlsxfile, type):
         df = pd.read_excel(xlsxfile)
@@ -16,6 +20,7 @@ class Telomere:
 class Ancestry:
     def __init__(self, xlsxfile, type):
         self.data = self.parse_xlsx(xlsxfile, type)
+        print(helper.get_current_time() + "Ancestry data parsed. (" + type + ")")
 
     def parse_xlsx(self, xlsxfile, type):
         df = pd.read_excel(xlsxfile)
@@ -97,6 +102,7 @@ class genotyping:
 class Methylation:
     def __init__(self, methfile, type, refdata):
         self.data = self.parse_methdata(methfile, type, refdata)
+        print(helper.get_current_time() + "Methylation data parsed. (" + type + ")")
 
     def parse_methdata(self, methfile, type, refdata):
         # create output .csv
@@ -106,10 +112,11 @@ class Methylation:
         df = pd.read_csv(csv_file)
 
         sums = df.sum(numeric_only=True)
+        sums_int = sums.astype(int)
 
         # create new data.frame
         results_df = pd.DataFrame({
-            "epr_number": sums.index,
+            "epr_number": sums_int,
             "methylation": sums.values
         })
 
