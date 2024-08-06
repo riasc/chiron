@@ -7,6 +7,9 @@ from pysnptools.snpreader import Bed
 from concurrent.futures import ThreadPoolExecutor
 import threading
 
+# classes
+import helper
+
 class SNVs:
     def __init__(self, bedfile, type, refdir, threads):
         # parse scoring file
@@ -19,6 +22,7 @@ class SNVs:
 
         # create data frame
         self.pgs_df = pd.DataFrame(list(self.pgs.items()), columns=['epr_number', 'PGS_Score'])
+        print(helper.get_current_time() + "SNV data parsed. (" + type + ")")
 
 
     def parse_snvs(self, bedfile, threads):

@@ -1,9 +1,13 @@
 import rdata
 import pandas as pd
 
+# classes
+import helper
+
 class HealthAndExposure:
     def __init__(self, filename, type):
         self.rdata = self.parse_he_rdata(filename, type)
+        print(helper.get_current_time() + "Health and Exposure data parsed. (" + type + ")")
 
     def parse_he_rdata(self, rdatafile, type):
         converted = rdata.read_rda(str(rdatafile))
@@ -199,8 +203,10 @@ class Exposome:
     def __init__(self, filename, type, expo):
         if expo == "exposome_a":
             self.rdata = self.parse_expoa_rdata(filename, type)
+            print(helper.get_current_time() + "Exposome A data parsed. (" + type + ")")
         elif expo == "exposome_b":
             self.rdata = self.parse_expob_rdata(filename, type)
+            print(helper.get_current_time() + "Exposome B data parsed. (" + type + ")")
 
     def parse_expoa_rdata(self, rdatafile, type):
         converted = rdata.read_rda(str(rdatafile))

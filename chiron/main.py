@@ -13,9 +13,11 @@ import general
 import genomics
 import surveys
 import model
+import helper
 
 def main():
     options = parse_arguments()
+    print(helper.get_current_time() + "Chiron - Starting the prediction using the defined parameters")
 
     dfiles = general.DataFiles(options.input, options.synthetic)
     hedata_train = surveys.HealthAndExposure(dfiles.he_survey["train"], "train")
@@ -34,14 +36,14 @@ def main():
     df_train = pd.merge(df_train, hladata_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, methdata_train.data, on="epr_number", how="outer")
 
-#    df_train = hedata_train.rdata
+    # preprocess data
     df_train.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
-    # in training data remove epr_number
     df_train.drop(columns=['epr_number'], inplace=True)
-
     df_train = df_train.map(pd.to_numeric, errors='coerce')
     df_train.replace(-888888, np.nan, inplace=True)
+    print(helper.get_current_time() + "Training data loaded and preprocessed")
 
+    print(helper.get_current_time() + "Training the model")
     # load and train the model
     gradboost = model.Model(df_train)
     gradboost.train()
@@ -63,12 +65,14 @@ def main():
     df_val = pd.merge(df_val, ancestry_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, hladata_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, methdata_val.data, on="epr_number", how="outer")
+    print(helper.get_current_time() + "Validation data loaded and preprocessed")
 
     df_val.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers
     df_val = df_val.map(pd.to_numeric, errors='coerce')
 
     # predict probabilities
+    print(helper.get_current_time() + "Predict disease probabilities")
     prediction = gradboost.predict(df_val)
 
     #create dataframe for output
