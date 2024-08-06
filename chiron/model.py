@@ -1,6 +1,6 @@
 from xgboost import XGBClassifier
-import xgboost as xgb
-from sklearn.ensemble import GradientBoostingClassifier
+#import xgboost as xgb
+#from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
 from sklearn.model_selection import GridSearchCV
@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from skopt import BayesSearchCV
 from skopt.space import Real, Integer
-import optuna
+#import optuna
 import shap
 import matplotlib.pyplot as plt
 
@@ -34,24 +34,24 @@ class Model:
 
         self.best_model = None
 
-    def objective(self, trial):
-        params = {
-            "objective": "binary:logistic",
-            "eval_metric": "auc",
-            "booster": "gbtree",
-            "lambda": trial.suggest_float("lambda", 1e-3, 1.0, log=True), "alpha": trial.suggest_float("alpha", 1e-3, 1.0, log=True), "subsample": trial.suggest_float("subsample", 0.4, 1.0), "colsample_bytree": trial.suggest_float("colsample_bytree", 0.4, 1.0),
-            "max_depth": trial.suggest_int("max_depth", 3, 15),
-            "eta": trial.suggest_float("eta", 1e-3, 1.0, log=True),
-            "gamma": trial.suggest_float("gamma", 1e-3, 5, log=True),
-            "min_child_weight": trial.suggest_int("min_child_weight", 1, 20),
-            "scale_pos_weight": trial.suggest_float("scale_pos_weight", 1, 20),
-            "max_bin": trial.suggest_int("max_bin", 10, 500),
-            "grow_policy": trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"]),
-        }
+    # def objective(self, trial):
+    #     params = {
+    #         "objective": "binary:logistic",
+    #         "eval_metric": "auc",
+    #         "booster": "gbtree",
+    #         "lambda": trial.suggest_float("lambda", 1e-3, 1.0, log=True), "alpha": trial.suggest_float("alpha", 1e-3, 1.0, log=True), "subsample": trial.suggest_float("subsample", 0.4, 1.0), "colsample_bytree": trial.suggest_float("colsample_bytree", 0.4, 1.0),
+    #         "max_depth": trial.suggest_int("max_depth", 3, 15),
+    #         "eta": trial.suggest_float("eta", 1e-3, 1.0, log=True),
+    #         "gamma": trial.suggest_float("gamma", 1e-3, 5, log=True),
+    #         "min_child_weight": trial.suggest_int("min_child_weight", 1, 20),
+    #         "scale_pos_weight": trial.suggest_float("scale_pos_weight", 1, 20),
+    #         "max_bin": trial.suggest_int("max_bin", 10, 500),
+    #         "grow_policy": trial.suggest_categorical("grow_policy", ["depthwise", "lossguide"]),
+    #     }
 
-        model = XGBClassifier(**params, use_label_encoder=False)
-        model.fit(self.X_train, self.Y_train)
-        preds = model.predict(self.X_test)
+    #     model = XGBClassifier(**params, use_label_encoder=False)
+    #     model.fit(self.X_train, self.Y_train)
+    #     preds = model.predict(self.X_test)
 
     def train(self):
 
@@ -79,7 +79,7 @@ class Model:
         self.best_model = bayes_search.best_estimator_
 
         print(f"Best parameters: {self.best_params}")
-        print(f"Best score: {self.best_score:.2f}")
+        print(f"Best score: {self.best_score:.4f}")
 
 
 

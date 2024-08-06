@@ -24,23 +24,21 @@ def main():
     snvsdata_train = variants.SNVs(dfiles.snvs_data["train"], "train", options.ref, options.threads)
     telomere_train = genomics.Telomere(dfiles.telomere_data["train"], "train")
     ancestry_train = genomics.Ancestry(dfiles.ancestry_data["train"], "train")
+    hladata_train = genomics.genotyping(dfiles.hla_data["train"], "train")
+    methdata_train = genomics.Methylation(dfiles.meth_data["train"], "train", options.ref)
 
     # merge into one data.frame
     df_train = pd.merge(hedata_train.rdata, snvsdata_train.pgs_df, on="epr_number", how="outer")
     df_train = pd.merge(df_train, telomere_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, ancestry_train.data, on="epr_number", how="outer")
+    df_train = pd.merge(df_train, hladata_train.data, on="epr_number", how="outer")
+    df_train = pd.merge(df_train, methdata_train.data, on="epr_number", how="outer")
 
 #    df_train = hedata_train.rdata
     df_train.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     # in training data remove epr_number
     df_train.drop(columns=['epr_number'], inplace=True)
 
-    # merge data into one final data.frame
-#    df = hedata_train.rdata
-    # cats_cols = df.select_dtypes(["category"]).columns # get the categorical columns
-    # df[cats_cols] = df[cats_cols].astype(str) # convert to string
-#    df.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
-    # df[cats_cols] = df[cats_cols].astype("category") # convert to back to category
     df_train = df_train.map(pd.to_numeric, errors='coerce')
     df_train.replace(-888888, np.nan, inplace=True)
 
@@ -56,11 +54,15 @@ def main():
     snvsdata_val = variants.SNVs(dfiles.snvs_data["val"], "val", options.ref, options.threads)
     telomere_val = genomics.Telomere(dfiles.telomere_data["val"], "val")
     ancestry_val = genomics.Ancestry(dfiles.ancestry_data["val"], "val")
+    hladata_val = genomics.genotyping(dfiles.hla_data["val"], "val")
+    methdata_val = genomics.Methylation(dfiles.meth_data["val"], "val", options.ref)
 
     # merge into one data.frame
     df_val = pd.merge(hedata_val.rdata, snvsdata_val.pgs_df, on="epr_number", how="outer")
     df_val = pd.merge(df_val, telomere_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, ancestry_val.data, on="epr_number", how="outer")
+    df_val = pd.merge(df_val, hladata_val.data, on="epr_number", how="outer")
+    df_val = pd.merge(df_val, methdata_val.data, on="epr_number", how="outer")
 
     df_val.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers
