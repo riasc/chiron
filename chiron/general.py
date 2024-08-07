@@ -179,4 +179,4 @@ class DataFiles:
         if synthetic:
             return methpath / Path("PEGS_methylation_beta_" + type + "_synthetic.rds")
         else:
-            return methpath / Path("PEGS_methylation_beta_" + type + ".txt")
+            return methpath / Path("PEGS_methylation_beta_" + type + ".rds")
