@@ -71,7 +71,30 @@ the genotype for the $i$-th SNP. The genotype corresponds to the number of refer
 #### Telomere Content
 
 We directly used the provided aggregated telomeric content estimates provided in the data
-(e.g., PEGS_genomic_data/telomere_content/PEGS_telomere_content_estimates_train_synthetic.xlsx)
+(e.g., telomere_content/PEGS_telomere_content_estimates_train_synthetic.xlsx)
+
+#### Ancestry
+
+We used the provided ancestry data and used the columns for AMR (Americas -- refers to
+indigeneous ancestry), AFR (African), EAS (East Asian), EUR (European), and SAS (South Asian).
+
+#### HLA Typing
+
+We used the provided HLA typing data and encoded the genes into pair of features consisting of
+the combined alleles and the genotype as follows:
+
+Let $A_1$ and $A_2$ be the two alleles for a gene $i$, we define a function $f$ that maps each allele
+$a \in \mathcal{A}$ to a unique integer $f(a)$ such that:
+
+$$A_{1i-num} = f(A_{1i})$$
+and
+$$A_{2i-num} = f(A_{2i})$$
+
+
+
+We assign a unique numerical value to each allele
+
+
 
 # Training Data
 
