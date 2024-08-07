@@ -76,7 +76,7 @@ class genotyping:
         alleles_counter = 1
 
         # create empty data frame
-        df = pd.DataFrame(columns=["epr_number", alleletype + "-Allele1", alleletype + "-Allele2"])
+        df = pd.DataFrame(columns=["epr_number", alleletype + "-score", alleletype + "-genotype"])
 
         with open(hlafile, "r") as fh:
             next(fh)
