@@ -20,6 +20,8 @@ def main():
     print(helper.get_current_time() + "Chiron - Starting the prediction using the defined parameters")
 
     dfiles = general.DataFiles(options.input, options.synthetic)
+#    print(methdata_train.data)
+
     hedata_train = surveys.HealthAndExposure(dfiles.he_survey["train"], "train")
     eadata_train = surveys.Exposome(dfiles.expoa_survey["train"], "train", "exposome_a")
     #ebdata_train = surveys.Exposome(dfiles.expob_survey["train"], "train", "exposome_b")
