@@ -66,11 +66,12 @@ $$PGS = \sum_{i=1}^{n} w_i \cdot g_i$$
 
 where $w_i$ is the weight for the $i$-th SNP and $g_i =\{0,1,2\}$ is
 the genotype for the $i$-th SNP. The genotype corresponds to the number of reference alleles, 0 (AA),
-1 (AB), and 2 (BB).$$
+1 (AB), and 2 (BB).
 
 #### Telomere Content
 
-We directly used the provided aggregate telomeric content estimates.
+We directly used the provided aggregated telomeric content estimates provided in the data
+(e.g., PEGS_genomic_data/telomere_content/PEGS_telomere_content_estimates_train_synthetic.xlsx)
 
 # Training Data
 
