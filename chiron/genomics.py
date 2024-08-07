@@ -73,7 +73,7 @@ class genotyping:
 
     def parse_hladata(self, hlafile, alleletype):
         alleles = {}
-        alleles_counter = 0
+        alleles_counter = 1
 
         # create empty data frame
         df = pd.DataFrame(columns=["epr_number", alleletype + "-Allele1", alleletype + "-Allele2"])
@@ -94,7 +94,17 @@ class genotyping:
                     alleles[al2] = alleles_counter
                     alleles_counter += 1
 
-                new_row = {"epr_number": epr, alleletype + "-Allele1": alleles[al1], alleletype + "-Allele2": alleles[al2]}
+                al1_num = alleles[al1]
+                al2_num = alleles[al2]
+                if al2_num > al2_num: # make sure that al1_num is always smaller than al2_num
+                    al1_num, al2_num = al2_num, al1_num
+                al_score = 100*al1_num + al2_num
+                if al1_num == al2_num:
+                    al_gt = 0
+                else:
+                    al_gt = 1
+
+                new_row = {"epr_number": epr, alleletype + "-score": al_score, alleletype + "-genotype": al_gt}
                 df.loc[len(df)] = new_row
 
         return df

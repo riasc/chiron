@@ -5,11 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.10.0] - 2024-08-08
+
+## Features
+
+- Changed the model of HLA typing (combined alleles into one and added the genotype as a feature)
+
 # [0.9.0] - 2024-08-07
 
 ## Features
 
 - Added methylation data as features to the model
+- Added parameters for search space optimization
 
 # [0.8.1] - 2024-08-06
 
