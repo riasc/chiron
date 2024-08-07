@@ -83,17 +83,22 @@ indigeneous ancestry), AFR (African), EAS (East Asian), EUR (European), and SAS 
 We used the provided HLA typing data and encoded the genes into pair of features consisting of
 the combined alleles and the genotype as follows:
 
-Let $A_1$ and $A_2$ be the two alleles for a gene $i$, we define a function $f$ that maps each allele
-$a \in \mathcal{A}$ to a unique integer $f(a)$ such that:
+Let $A_1$ and $A_2$ be the two alleles for a gene $i$, we define a function $f$ that maps each
+allele $a \in \mathcal{A}$ to a unique integer $f(a)$ such that:
 
 $$A_{1i-num} = f(A_{1i})$$
+
 and
+
 $$A_{2i-num} = f(A_{2i})$$
 
+We then create the combined feature value $C_i$ as:
 
+$$C_i = A_{1i-num} \cdot 100 + A_{2i-num}$$
 
-We assign a unique numerical value to each allele
+And the genotype feature value $H_i$ as:
 
+$$H_i = \begin{cases} 0 & \text{if } A_{1i} = A_{2i} \\ 1 & \text{if } A_{1i} \neq A_{2i} \end{cases}$$
 
 
 # Training Data
