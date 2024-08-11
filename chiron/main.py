@@ -45,6 +45,10 @@ def main():
     df_train.replace(-888888, np.nan, inplace=True)
     print(helper.get_current_time() + "Training data loaded and preprocessed")
 
+    # save it to file
+    output_path = Path(options.output) / Path("training_data_meth.csv")
+    methdata_train.data.to_csv(output_path, index=False)
+
     print(helper.get_current_time() + "Training the model")
     # load and train the model
     gradboost = model.Model(df_train)
@@ -68,6 +72,10 @@ def main():
     df_val = pd.merge(df_val, hladata_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, methdata_val.data, on="epr_number", how="outer")
     print(helper.get_current_time() + "Validation data loaded and preprocessed")
+
+    # save val data
+    output_path = Path(options.output) / Path("validation_data_meth.csv")
+    methdata_val.data.to_csv(output_path, index=False)
 
     df_val.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers
