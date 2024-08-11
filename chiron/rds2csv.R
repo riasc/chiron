@@ -6,4 +6,4 @@ csv_file <- args[2]
 data <- readRDS(rds_file)
 
 # write the CSV file
-write.csv(data, csv_file, row.names = FALSE)
+write.csv(data, csv_file, row.names = TRUE)
