@@ -111,6 +111,7 @@ class genotyping:
 
 class Methylation:
     def __init__(self, methfile, type, refdata):
+        self.cpg = self.parse_cpg_catalog(refdata)
         self.data = self.parse_methdata(methfile, type, refdata)
         print(helper.get_current_time() + "Methylation data parsed. (" + type + ")")
 
@@ -120,15 +121,24 @@ class Methylation:
         csv_file = Path(refdata) / Path("methylation.csv")
         subprocess.run(["Rscript", rds2csv_path , methfile, csv_file])
         df = pd.read_csv(csv_file)
+        df_filt = df[df.iloc[:,0].isin(self.cpg)]
 
-        sums = df.sum(numeric_only=True)
-        sums_int = sums.astype(int)
+        # remove cg ids from data frame
+        df_filt = df_filt.iloc[:, 1:]
+        filt_mean = df_filt.mean()
 
-        # create new data.frame
         results_df = pd.DataFrame({
-            "epr_number": sums_int,
-            "methylation": sums.values
+            "epr_number": filt_mean.index.astype(int),
+            "methylation": filt_mean.values
         })
 
-        subprocess.run(["rm", csv_file])
+        #subprocess.run(["rm", csv_file])
         return results_df
+
+    def parse_cpg_catalog(self, refdir):
+        path = Path(refdir) / Path("CpG.txt")
+        fh = open(path, "r")
+        cpgs = []
+        for line in fh:
+            cpgs.append(line.strip())
+        return cpgs
