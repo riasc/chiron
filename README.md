@@ -100,6 +100,37 @@ And the genotype feature value $H_i$ as:
 
 $$H_i = \begin{cases} 0 & \text{if } A_{1i} = A_{2i} \\ 1 & \text{if } A_{1i} \neq A_{2i} \end{cases}$$
 
+#### Methylation
+
+We used the
+[Infinium MethylationEPIC v1.0 Product Files](https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html)
+and identified the CpG sites associated with genes that are relevant for hypercholesterolemia. These include:
+
+- LDLR (Low-Density Lipoprotein Receptor): Mutations in the LDLR gene are the most common cause of familial
+hypercholesterolemia. The LDLR gene encodes the LDL receptor, which is responsible for removing low-density
+lipoprotein (LDL) cholesterol from the bloodstream.
+- APOB (Apolipoprotein B): This gene encodes apolipoprotein B, a primary protein component of LDL particles.
+Mutations in the APOB gene can lead to defective binding of LDL particles to their receptors, resulting in
+increased blood levels of LDL cholesterol.
+- PCSK9 (Proprotein Convertase Subtilisin/Kexin Type 9): The PCSK9 gene encodes a protein that regulates the
+number of LDL receptors on the surface of liver cells. Gain-of-function mutations in PCSK9 lead to fewer LDL
+receptors and higher cholesterol levels.
+- LDLRAP1 (Low-Density Lipoprotein Receptor Adaptor Protein 1): Mutations in this gene can cause autosomal
+recessive hypercholesterolemia, a condition similar to familial hypercholesterolemia but inherited differently.
+- CETP (Cholesteryl Ester Transfer Protein): Variants in the CETP gene can influence HDL cholesterol levels,
+indirectly affecting LDL levels and overall cholesterol metabolism.
+- LIPA (Lysosomal Acid Lipase A): Mutations in LIPA can lead to cholesterol ester storage disease and contribute
+to elevated cholesterol levels.
+- ABCG5 and ABCG8 (ATP-Binding Cassette Subfamily G Members 5 and 8): These genes are involved in the regulation
+of cholesterol absorption and excretion. Mutations can lead to conditions like sitosterolemia, which can influence
+cholesterol levels.
+- APOE (Apolipoprotein E): Variants in the APOE gene can affect cholesterol metabolism, particularly the clearance
+of triglyceride-rich lipoproteins. Certain alleles, like APOE4, are associated with higher cholesterol levels and
+an increased risk of cardiovascular disease.
+
+The resulting CpG island are stored in [ref/CpG.txt](https://github.com/riasc/chiron/ref/CpG.txt)
+
+
 
 # Training Data
 
