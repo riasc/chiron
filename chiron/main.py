@@ -20,7 +20,6 @@ def main():
     print(helper.get_current_time() + "Chiron - Starting the prediction using the defined parameters")
 
     dfiles = general.DataFiles(options.input, options.synthetic)
-#    print(methdata_train.data)
 
     hedata_train = surveys.HealthAndExposure(dfiles.he_survey["train"], "train")
     eadata_train = surveys.Exposome(dfiles.expoa_survey["train"], "train", "exposome_a")
@@ -30,13 +29,16 @@ def main():
     ancestry_train = genomics.Ancestry(dfiles.ancestry_data["train"], "train")
     hladata_train = genomics.genotyping(dfiles.hla_data["train"], "train")
     methdata_train = genomics.Methylation(dfiles.meth_data["train"], "train", options.ref)
+    structvardata_train = variants.StructuralVariants(dfiles.sv_data["train"], "train", options.ref)
 
-    # merge into one data.frame
-    df_train = pd.merge(hedata_train.rdata, snvsdata_train.pgs_df, on="epr_number", how="outer")
+    # merge into one data.
+    df_train = hedata_train.rdata
+    df_train = pd.merge(df_train, snvsdata_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, telomere_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, ancestry_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, hladata_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, methdata_train.data, on="epr_number", how="outer")
+    df_train = pd.merge(df_train, structvardata_train.data, on="epr_number", how="outer")
 
     # preprocess data
     df_train.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
@@ -64,13 +66,16 @@ def main():
     ancestry_val = genomics.Ancestry(dfiles.ancestry_data["val"], "val")
     hladata_val = genomics.genotyping(dfiles.hla_data["val"], "val")
     methdata_val = genomics.Methylation(dfiles.meth_data["val"], "val", options.ref)
+    structvardata_val = variants.StructuralVariants(dfiles.sv_data["val"], "val", options.ref)
 
     # merge into one data.frame
-    df_val = pd.merge(hedata_val.rdata, snvsdata_val.pgs_df, on="epr_number", how="outer")
+    df_val = hedata_val.rdata
+    df_val = pd.merge(df_val, snvsdata_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, telomere_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, ancestry_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, hladata_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, methdata_val.data, on="epr_number", how="outer")
+    df_val = pd.merge(df_val, structvardata_val.data, on="epr_number", how="outer")
     print(helper.get_current_time() + "Validation data loaded and preprocessed")
 
     # save val data
