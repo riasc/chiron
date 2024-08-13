@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 #from bed_reader import open_bed, sample_file
 from pysnptools.snpreader import Bed
+import vcfpy
 from concurrent.futures import ThreadPoolExecutor
 import threading
 
@@ -21,7 +22,7 @@ class SNVs:
         self.variants = self.parse_snvs(bedfile, threads)
 
         # create data frame
-        self.pgs_df = pd.DataFrame(list(self.pgs.items()), columns=['epr_number', 'PGS_Score'])
+        self.data = pd.DataFrame(list(self.pgs.items()), columns=['epr_number', 'PGS_Score'])
         print(helper.get_current_time() + "SNV data parsed. (" + type + ")")
 
 
@@ -89,3 +90,91 @@ def format_chromosome(chromosome):
     else:
         snp_chr = str(chromosome)
     return snp_chr
+
+
+class StructuralVariants:
+    def __init__(self, vcffile, type, refdata):
+        self.genes = self.parse_sig_genes(refdata)
+        self.data = self.process_svs(vcffile)
+
+        print(helper.get_current_time() + "SV data parsed. (" + type + ")")
+
+    def process_svs(self, vcffile):
+        vcf_reader = vcfpy.Reader.from_path(vcffile)
+        # samples
+        samples = vcf_reader.header.samples.names
+
+        deletions = {}
+        duplications = {}
+        inversions = {}
+
+        for record in vcf_reader:
+            chr = record.CHROM
+
+            # iterate through significant genes
+            for gene in self.genes:
+                if self.genes[gene]["chr"] == chr:
+                    start = self.genes[gene]["start"]
+                    end = self.genes[gene]["end"]
+                    if start <= record.POS <= end:
+                        svtype = record.INFO["SVTYPE"]
+                        for call in record.calls:
+                            genotype = call.data.get("GT")
+                            sample_id = int(call.sample)
+                            if genotype is None:
+                                continue
+                            if genotype[0] == 0 and genotype[1] == 0:
+                                continue
+                            else:
+                                if svtype == "DEL":
+                                    if sample_id not in deletions:
+                                        deletions[sample_id] = 0
+                                    deletions[sample_id] += 1
+                                elif svtype == "DUP":
+                                    if sample_id not in duplications:
+                                        duplications[sample_id] = 0
+                                    duplications[sample_id] += 1
+                                elif svtype == "INV":
+                                    if sample_id not in inversions:
+                                        inversions[sample_id] = 0
+                                    inversions[sample_id] += 1
+
+        # create data frames
+        deletions_df = pd.DataFrame(list(deletions.items()), columns=['epr_number', 'deletions'])
+        duplications_df = pd.DataFrame(list(duplications.items()), columns=['epr_number', 'duplications'])
+        inversions_df = pd.DataFrame(list(inversions.items()), columns=['epr_number', 'inversions'])
+
+        # merge intp one
+        sv_df = pd.merge(deletions_df, duplications_df, on='epr_number', how='outer')
+        sv_df = pd.merge(sv_df, inversions_df, on='epr_number', how='outer')
+
+        return sv_df
+
+        # GT:ADP:CN:DD:EC:ND:RP:SC:SP
+        # ##FORMAT=<ID=ADP,Number=1,Type=Float,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">
+        ##FORMAT=<ID=CN,Number=1,Type=Integer,Description="Copy Number">
+        ##FORMAT=<ID=DD,Number=A,Type=Float,Description="Normalized depth in before, inside first, inside second, and after SV">
+        ##FORMAT=<ID=EC,Number=1,Type=Integer,Description="Number of supporting soft clips around end position of SV">
+        ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+        ##FORMAT=<ID=ND,Number=1,Type=Float,Description="Normalized depth">
+        ##FORMAT=<ID=RP,Number=1,Type=Integer,Description="Number of supporting read pairs">
+        ##FORMAT=<ID=SC,Number=1,Type=Integer,Description="Number of supporting soft clips around starting position of SV">
+        ##FORMAT=<ID=SP,Number=1,Type=Integer,Description="Number of supporting split reads">
+
+
+    def parse_sig_genes(self, refdata):
+        genes = {}
+        genesbed = Path(refdata) / Path("genes.bed")
+        fh = open(str(genesbed))
+        for line in fh:
+            fields = line.strip().split("\t")
+            chr = fields[0]
+            start = int(fields[1])
+            end = int(fields[2])
+            gene = fields[3]
+            genes[gene] = {
+                "chr": chr,
+                "start": start,
+                "end": end
+            }
+        return genes
