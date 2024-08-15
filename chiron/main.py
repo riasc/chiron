@@ -40,16 +40,16 @@ def main():
     df_train = pd.merge(df_train, methdata_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, structvardata_train.data, on="epr_number", how="outer")
 
+    # save train data
+    output_path = Path(options.output) / Path("training_data.csv")
+    df_train.to_csv(output_path, index=False)
+
     # preprocess data
     df_train.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     df_train.drop(columns=['epr_number'], inplace=True)
     df_train = df_train.map(pd.to_numeric, errors='coerce')
     df_train.replace(-888888, np.nan, inplace=True)
     print(helper.get_current_time() + "Training data loaded and preprocessed")
-
-    # save it to file
-    output_path = Path(options.output) / Path("training_data_meth.csv")
-    methdata_train.data.to_csv(output_path, index=False)
 
     print(helper.get_current_time() + "Training the model")
     # load and train the model
@@ -79,8 +79,8 @@ def main():
     print(helper.get_current_time() + "Validation data loaded and preprocessed")
 
     # save val data
-    output_path = Path(options.output) / Path("validation_data_meth.csv")
-    methdata_val.data.to_csv(output_path, index=False)
+    output_path = Path(options.output) / Path("train_data.csv")
+    df_val.to_csv(output_path, index=False)
 
     df_val.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers

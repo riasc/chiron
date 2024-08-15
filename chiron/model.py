@@ -107,10 +107,11 @@ class Model:
 
              # Create and save summary plot
             plt.figure(figsize=(12, 8))
-            shap.summary_plot(shap_values, self.X_test, max_display=50, show=False)
+            shap.summary_plot(shap_values, self.X_test, max_display=100, show=False)
             plt.tight_layout()
             plt.savefig('shap_summary_plot.png', dpi=300, bbox_inches='tight')
             plt.close()
+
 
                     # Create and save waterfall plot
             plt.figure(figsize=(12, 8))
@@ -118,6 +119,25 @@ class Model:
             plt.tight_layout()
             plt.savefig('shap_waterfall_plot.png', dpi=300, bbox_inches='tight')
             plt.close()
+
+
+            # Aggregate SHAP values to get feature importance
+            shap_values_mean = np.abs(shap_values.values).mean(axis=0)
+            feature_importance = pd.DataFrame({
+                'Feature': self.X_train.columns,
+                'SHAP_mean_abs': shap_values_mean
+            })
+
+            # Sort by most affected features
+            most_affected = feature_importance.sort_values(by='SHAP_mean_abs', ascending=False)
+            least_affected = feature_importance.sort_values(by='SHAP_mean_abs', ascending=True)
+
+            # Save most affected features to file
+            most_affected.to_csv('most_affected_features.csv', index=False)
+
+            # Save least affected features to file
+            least_affected.to_csv('least_affected_features.csv', index=False)
+
 
 
 

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [0.11.0] - 2024-08-13
+
+## Features
+
+- Added counts of Structural Variants (SVs) - for certain genes (e.g., APOB) - as features to the model
+- Removed features that showed no effect in the model (SHAP)
+- Also print the SHAP values for the features to file
+
 # [0.10.0] - 2024-08-08
 
 ## Features
