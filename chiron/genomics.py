@@ -15,6 +15,8 @@ class Telomere:
         df = pd.read_excel(xlsxfile)
         # replace column names
         df.columns = ["epr_number", "sampleID", "telomere_content"]
+        # remove sampleID
+        df = df.drop(columns=["sampleID"])
         return df
 
 class Ancestry:
