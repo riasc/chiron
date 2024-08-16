@@ -90,7 +90,7 @@ class HealthAndExposure:
             #"he_q145_diesel_PARQ",
             "he_q146_dyes_PARQ",
             "he_q147_formaldehyde_PARQ",
-            "he_q148_gasoline_PARQ",
+            #"he_q148_gasoline_PARQ",
             "he_q149_heavy_metals_PARQ",
             "he_q150_pesticide_PARQ",
             #"he_q151_sand_PARQ",
