@@ -1,3 +1,7 @@
+[![Downloads](https://img.shields.io/github/downloads/riasc/chiron/total.svg)](https://img.shields.io/github/downloads/riasc/chiron/total.svg)
+
+
+
 # chiron
 Predict hypercholesterolemia from the Personalized Environment and Genes Study
 
