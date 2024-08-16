@@ -28,6 +28,8 @@ class Ancestry:
         df = pd.read_excel(xlsxfile)
         # replace column names
         df.columns = ["epr_number", "sampleID", "ancestry_AFR", "ancestry_AMR", "ancestry_EAS", "ancestry_EUR", "ancestry_SAS"]
+        # remove sampleID
+        df = df.drop(columns=["sampleID"])
         return df
 
 class genotyping:
@@ -36,7 +38,7 @@ class genotyping:
         df_hla_b = self.parse_hladata(hlafiles["HLA-B"], "HLA-B")
         df_hla_c = self.parse_hladata(hlafiles["HLA-C"], "HLA-C")
         #df_hla_dma = self.parse_hladata(hlafiles["HLA-DMA"], "HLA-DMA")
-        df_hla_dmb = self.parse_hladata(hlafiles["HLA-DMB"], "HLA-DMB")
+        # df_hla_dmb = self.parse_hladata(hlafiles["HLA-DMB"], "HLA-DMB")
         df_hla_doa = self.parse_hladata(hlafiles["HLA-DOA"], "HLA-DOA")
         df_hla_dob = self.parse_hladata(hlafiles["HLA-DOB"], "HLA-DOB")
         df_hla_dpa1 = self.parse_hladata(hlafiles["HLA-DPA1"], "HLA-DPA1")
@@ -44,9 +46,9 @@ class genotyping:
         df_hla_dqa1 = self.parse_hladata(hlafiles["HLA-DQA1"], "HLA-DQA1")
         df_hla_dqb1 = self.parse_hladata(hlafiles["HLA-DQB1"], "HLA-DQB1")
         #df_hla_dra = self.parse_hladata(hlafiles["HLA-DRA"], "HLA-DRA")
-        df_hla_drb1 = self.parse_hladata(hlafiles["HLA-DRB1"], "HLA-DRB1")
-        df_hla_drb3 = self.parse_hladata(hlafiles["HLA-DRB3"], "HLA-DRB3")
-        df_hla_drb5 = self.parse_hladata(hlafiles["HLA-DRB5"], "HLA-DRB5")
+        # df_hla_drb1 = self.parse_hladata(hlafiles["HLA-DRB1"], "HLA-DRB1")
+        # df_hla_drb3 = self.parse_hladata(hlafiles["HLA-DRB3"], "HLA-DRB3")
+        # df_hla_drb5 = self.parse_hladata(hlafiles["HLA-DRB5"], "HLA-DRB5")
         # df_hla_f = self.parse_hladata(hlafiles["HLA-F"], "HLA-F")
         # df_hla_g = self.parse_hladata(hlafiles["HLA-G"], "HLA-G")
         # df_hla_h = self.parse_hladata(hlafiles["HLA-H"], "HLA-H")
@@ -56,7 +58,7 @@ class genotyping:
         self.data = pd.merge(df_hla_a, df_hla_b, on="epr_number", how="outer")
         self.data = pd.merge(self.data, df_hla_c, on="epr_number", how="outer")
         #self.data = pd.merge(self.data, df_hla_dma, on="epr_number", how="outer")
-        self.data = pd.merge(self.data, df_hla_dmb, on="epr_number", how="outer")
+        # self.data = pd.merge(self.data, df_hla_dmb, on="epr_number", how="outer")
         self.data = pd.merge(self.data, df_hla_doa, on="epr_number", how="outer")
         self.data = pd.merge(self.data, df_hla_dob, on="epr_number", how="outer")
         self.data = pd.merge(self.data, df_hla_dpa1, on="epr_number", how="outer")
@@ -64,9 +66,9 @@ class genotyping:
         self.data = pd.merge(self.data, df_hla_dqa1, on="epr_number", how="outer")
         self.data = pd.merge(self.data, df_hla_dqb1, on="epr_number", how="outer")
         #self.data = pd.merge(self.data, df_hla_dra, on="epr_number", how="outer")
-        self.data = pd.merge(self.data, df_hla_drb1, on="epr_number", how="outer")
-        self.data = pd.merge(self.data, df_hla_drb3, on="epr_number", how="outer")
-        self.data = pd.merge(self.data, df_hla_drb5, on="epr_number", how="outer")
+        # self.data = pd.merge(self.data, df_hla_drb1, on="epr_number", how="outer")
+        # self.data = pd.merge(self.data, df_hla_drb3, on="epr_number", how="outer")
+        # self.data = pd.merge(self.data, df_hla_drb5, on="epr_number", how="outer")
         # self.data = pd.merge(self.data, df_hla_f, on="epr_number", how="outer")
         # self.data = pd.merge(self.data, df_hla_g, on="epr_number", how="outer")
         # self.data = pd.merge(self.data, df_hla_h, on="epr_number", how="outer")
@@ -127,7 +129,7 @@ class Methylation:
 
         # remove cg ids from data frame
         df_filt = df_filt.iloc[:, 1:]
-        filt_mean = df_filt.mean()
+        filt_mean = df_filt.sum()
 
         results_df = pd.DataFrame({
             "epr_number": filt_mean.index.astype(int),
