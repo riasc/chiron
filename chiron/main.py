@@ -53,7 +53,7 @@ def main():
 
     print(helper.get_current_time() + "Training the model")
     # load and train the model
-    gradboost = model.Model(df_train)
+    gradboost = model.Model(df_train, options)
     gradboost.train()
 
     if options.explain:
@@ -112,6 +112,7 @@ def parse_arguments():
     p.add_argument("-o", "--output", help="Output file", required=True)
     p.add_argument("-r", "--ref", help="Folder with reference files", required=True)
     p.add_argument("-e", "--explain", action="store_true", help="Explain the model", required=False)
+    p.add_argument("-c", "--challenge", action="store_true", help="Challenge mode", required=False)
     p.add_argument("-t", "--threads", help="Number of threads", required=False, default=1, type=int)
     return p.parse_args()
 
