@@ -1,5 +1,8 @@
+import os
 import rdata
 import pandas as pd
+import subprocess
+import tempfile
 
 # classes
 import helper
@@ -200,12 +203,12 @@ class HealthAndExposure:
         return fam_df
 
 class Exposome:
-    def __init__(self, filename, type, expo):
-        if expo == "exposome_a":
-            self.rdata = self.parse_expoa_rdata(filename, type)
+    def __init__(self, filename, type, exposome_type):
+        if exposome_type == "exposome_a":
+            self.rdata = self.parse_expoa_rdata(filename, exposome_type)
             print(helper.get_current_time() + "Exposome A data parsed. (" + type + ")")
-        elif expo == "exposome_b":
-            self.rdata = self.parse_expob_rdata(filename, type)
+        elif exposome_type == "exposome_b":
+            self.rdata = self.parse_expob_rdata(filename, exposome_type)
             print(helper.get_current_time() + "Exposome B data parsed. (" + type + ")")
 
     def parse_expoa_rdata(self, rdatafile, type):
@@ -225,19 +228,84 @@ class Exposome:
         selected = df[["epr_number"] + cats]
         return selected
 
-    def parse_expob_rdata(self, rdatafile, type):
-        parsed_data = rdata.parser.parse_file(str(rdatafile))
-        converted = rdata.conversion.convert(parsed_data)
+    def parse_expob_rdata(self, rdatafile, exposome_type):
+        exposome2csv_path = os.path.join(os.path.dirname(__file__), 'exposome2csv.R')
+        df = pd.DataFrame()
+        with tempfile.NamedTemporaryFile() as csv_file:
+            subprocess.run(["Rscript", exposome2csv_path, rdatafile, csv_file.name, exposome_type])
+            df = pd.read_csv(csv_file.name)
 
-        df = next(iter(converted.values())) # convert into dataframe
+        # print to file for testing
+        df.to_csv("exposome_b.csv", index=False)
 
-        # extract
         cats = [
+            "eb_a001_multivitamin_PARQ",
+            "eb_a002_vitamin_a_PARQ",
+            "eb_a003_vitamin_b3_PARQ",
+            "eb_a004_vitamin_b6_PARQ",
+            "eb_a005_vitamin_b12_PARQ",
+            "eb_a006_vitamin_b_comp_PARQ",
+            "eb_a007_vitamin_c_PARQ",
+            "eb_a008_vitamin_d_PARQ",
+            "eb_a009_vitamin_e_PARQ",
+            "eb_a010_calcium_PARQ",
+            "eb_a011_chromium_PARQ",
+            "eb_a012_iron_PARQ",
+            "eb_a013_magnesium_PARQ",
+            "eb_a014_potassium_PARQ",
+            "eb_a015_selenium_PARQ",
+            "eb_a016_zinc_PARQ",
+            "eb_a017_blk_cohosh_PARQ",
+            "eb_a018_coq10_PARQ",
             "eb_a019_fish_oil_PARQ",
             "eb_a020_flaxseed_oil_PARQ",
-            "eb_a021_folic_acid_PARQ",
-            "eb_a022_gingko_biloba_PARQ"
+            "eb_g136_wkday_sleep_hrs",
+            "eb_h161_fastfood",
+            "eb_h164_takeout",
+            "eb_i174_milk_whole",
+            "eb_i175_milk_nondairy",
+            "eb_i176_cream",
+            "eb_i180_butter",
+            "eb_i190_cheese_regular",
+            "eb_i192_avocado",
+            "eb_i194_blueberries",
+            "eb_i207_beans_lentils",
+            "eb_i209_broccoli",
+            "eb_i220_spinach_raw",
+            "eb_i225_eggs",
+            "eb_i229_bacon",
+            "eb_i230_deli_meats",
+            "eb_i231_other_processed_meat",
+            "eb_i232_hamburger",
+            "eb_i234_ham",
+            "eb_i235_canned_tuna",
+            "eb_i240_oatmeal",
+            "eb_i246_whole_wheat",
+            "eb_i254_fries",
+            "eb_i256_pizza",
+            "eb_i278_other_nuts",
+            "eb_k293_blood_type",
+            "eb_k299a_hyperlipidemia_you",
+            "eb_k301a_clot_prob_you",
+            "eb_k307a_sickle_cell_you",
         ]
 
         selected = df[["epr_number"] + cats]
         return selected
+
+
+        # parsed_data = rdata.parser.parse_file(str(rdatafile))
+        # converted = rdata.conversion.convert(parsed_data)
+
+        # df = next(iter(converted.values())) # convert into dataframe
+
+        # # extract
+        # cats = [
+        #     "eb_a019_fish_oil_PARQ",
+        #     "eb_a020_flaxseed_oil_PARQ",
+        #     "eb_a021_folic_acid_PARQ",
+        #     "eb_a022_gingko_biloba_PARQ"
+        # ]
+
+        # selected = df[["epr_number"] + cats]
+        # return selected
