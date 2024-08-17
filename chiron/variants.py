@@ -104,49 +104,89 @@ class StructuralVariants:
         # samples
         samples = vcf_reader.header.samples.names
 
-        deletions = {}
-        duplications = {}
-        inversions = {}
+        del_count = {}
+        del_len = {}
+        dup_count = {}
+        dup_len = {}
+        inv_count = {}
+        inv_len = {}
 
         for record in vcf_reader:
             chr = record.CHROM
 
+            #####
+            svtype = record.INFO["SVTYPE"]
+            svlen = record.INFO["SVLEN"]
+
+            for call in record.calls:
+                genotype = call.data.get("GT")
+                sample_id = int(call.sample)
+                if genotype is None:
+                    continue
+                if genotype[0] == 0 and genotype[1] == 0:
+                    continue
+                else:
+                    if svtype == "DEL":
+                        if sample_id not in del_count:
+                            del_count[sample_id] = 0
+                            del_len[sample_id] = 0
+                        del_count[sample_id] += 1
+                        del_len[sample_id] += svlen
+                    elif svtype == "DUP":
+                        if sample_id not in dup_count:
+                            dup_count[sample_id] = 0
+                        dup_count[sample_id] += 1
+                        dup_len[sample_id] += svlen
+                    elif svtype == "INV":
+                        if sample_id not in inv_count:
+                            inv_count[sample_id] = 0
+                        inv_count[sample_id] += 1
+                        inv_len[sample_id] += svlen
+
             # iterate through significant genes
-            for gene in self.genes:
-                if self.genes[gene]["chr"] == chr:
-                    start = self.genes[gene]["start"]
-                    end = self.genes[gene]["end"]
-                    if start <= record.POS <= end:
-                        svtype = record.INFO["SVTYPE"]
-                        for call in record.calls:
-                            genotype = call.data.get("GT")
-                            sample_id = int(call.sample)
-                            if genotype is None:
-                                continue
-                            if genotype[0] == 0 and genotype[1] == 0:
-                                continue
-                            else:
-                                if svtype == "DEL":
-                                    if sample_id not in deletions:
-                                        deletions[sample_id] = 0
-                                    deletions[sample_id] += 1
-                                elif svtype == "DUP":
-                                    if sample_id not in duplications:
-                                        duplications[sample_id] = 0
-                                    duplications[sample_id] += 1
-                                elif svtype == "INV":
-                                    if sample_id not in inversions:
-                                        inversions[sample_id] = 0
-                                    inversions[sample_id] += 1
+            # for gene in self.genes:
+            #     if self.genes[gene]["chr"] == chr:
+            #         start = self.genes[gene]["start"]
+            #         end = self.genes[gene]["end"]
+            #         if start <= record.POS <= end:
+            #             svtype = record.INFO["SVTYPE"]
+            #             for call in record.calls:
+            #                 genotype = call.data.get("GT")
+            #                 sample_id = int(call.sample)
+            #                 if genotype is None:
+            #                     continue
+            #                 if genotype[0] == 0 and genotype[1] == 0:
+            #                     continue
+            #                 else:
+            #                     if svtype == "DEL":
+            #                         if sample_id not in deletions:
+            #                             deletions[sample_id] = 0
+            #                         deletions[sample_id] += 1
+            #                     elif svtype == "DUP":
+            #                         if sample_id not in duplications:
+            #                             duplications[sample_id] = 0
+            #                         duplications[sample_id] += 1
+            #                     elif svtype == "INV":
+            #                         if sample_id not in inversions:
+            #                             inversions[sample_id] = 0
+            #                         inversions[sample_id] += 1
 
         # create data frames
-        deletions_df = pd.DataFrame(list(deletions.items()), columns=['epr_number', 'deletions'])
-        duplications_df = pd.DataFrame(list(duplications.items()), columns=['epr_number', 'duplications'])
-        inversions_df = pd.DataFrame(list(inversions.items()), columns=['epr_number', 'inversions'])
+        del_count_df = pd.DataFrame(list(del_count.items()), columns=['epr_number', 'deletions'])
+        del_len_df = pd.DataFrame(list(del_count.items()), columns=['epr_number', 'deletions'])
+
+        dup_count_df = pd.DataFrame(list(dup_count.items()), columns=['epr_number', 'duplications'])
+        dup_len_df = pd.DataFrame(list(dup_count.items()), columns=['epr_number', 'duplications'])
+
+        inv_count_df = pd.DataFrame(list(inv_count.items()), columns=['epr_number', 'inversions'])
+        inv_len_df = pd.DataFrame(list(inv_count.items()), columns=['epr_number', 'inversions'])
 
         # merge intp one
-        sv_df = pd.merge(deletions_df, duplications_df, on='epr_number', how='outer')
-        sv_df = pd.merge(sv_df, inversions_df, on='epr_number', how='outer')
+        sv_df = pd.merge(del_count_df, del_len_df, on='epr_number', how='outer')
+        sv_df = pd.merge(sv_df, dup_count_df, on='epr_number', how='outer')
+        sv_df = pd.merge(sv_df, dup_len_df, on='epr_number', how='outer')
+        sv_df = pd.merge(sv_df, inv_count_df, on='epr_number', how='outer')
+        sv_df = pd.merge(sv_df, inv_len_df, on='epr_number', how='outer')
 
         return sv_df
 
