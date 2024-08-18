@@ -136,7 +136,7 @@ class Methylation:
             "methylation": filt_mean.values
         })
 
-        #subprocess.run(["rm", csv_file])
+        subprocess.run(["rm", csv_file])
         return results_df
 
     def parse_cpg_catalog(self, refdir):
