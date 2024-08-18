@@ -42,11 +42,11 @@ class HealthAndExposure:
             "he_d028_cough_breathlessness",
             "he_d030_asthma_PARQ",
             #"he_e031_epilepsy",
-            "he_e032_migraine",
+            #"he_e032_migraine",
             #"he_e033_parkinsons",
             #"he_e034_ptsd",
             #"he_e035_alzheimers",
-            "he_e036_ms",
+            #"he_e036_ms",
             #"he_f037_celiac",
            # "he_f038_lactose_intolerance",
             #"he_f039_crohns",
@@ -81,7 +81,7 @@ class HealthAndExposure:
             "he_k069_psoriasis",
             "he_k070_eczema",
             "he_k071_urticaria",
-            "he_k072_sunburn",
+            #"he_k072_sunburn",
             #"he_k073_scars",
             "he_l080_chronic_fatigue",
             "he_o103_cancer_PARQ",
@@ -121,7 +121,7 @@ class HealthAndExposure:
             ("172", "rheu_arthritis"),
             ("173", "alzheimers"),
             ("174", "asthma"),
-            ("175", "autism"),
+#            ("175", "autism"),
             ("176", "hayfever"),
             ("177", "emphysema"),
             ("178", "parkinsons")
@@ -205,10 +205,10 @@ class HealthAndExposure:
 class Exposome:
     def __init__(self, filename, type, exposome_type):
         if exposome_type == "exposome_a":
-            self.rdata = self.parse_expoa_rdata(filename, exposome_type)
+            self.data = self.parse_expoa_rdata(filename, exposome_type)
             print(helper.get_current_time() + "Exposome A data parsed. (" + type + ")")
         elif exposome_type == "exposome_b":
-            self.rdata = self.parse_expob_rdata(filename, exposome_type)
+            self.data = self.parse_expob_rdata(filename, exposome_type)
             print(helper.get_current_time() + "Exposome B data parsed. (" + type + ")")
 
     def parse_expoa_rdata(self, rdatafile, type):
@@ -222,10 +222,19 @@ class Exposome:
             "ea_a040_mold_derived",
             "ea_a046_carpet_PARQ",
             "ea_a058_pet_PARQ",
-            "ea_a067_animal_waste"
+            "ea_a075_hazard_waste",
+            "ea_a078_landfill",
+            "ea_a084_coal_plant",
+            "ea_a088_factory_PARQ",
+            "ea_b110a_arsenic_PARQ",
+            "ea_b110c_cadmium_PARQ",
+            "ea_b110e_lead_PARQ",
+            "ea_b110f_mercury_PARQ"
         ]
 
         selected = df[["epr_number"] + cats]
+        # make epr_number as numeric
+        selected.loc[:, "epr_number"] = pd.to_numeric(selected["epr_number"], errors='coerce')
         return selected
 
     def parse_expob_rdata(self, rdatafile, exposome_type):
@@ -239,22 +248,6 @@ class Exposome:
         df.to_csv("exposome_b.csv", index=False)
 
         cats = [
-            "eb_a001_multivitamin_PARQ",
-            "eb_a002_vitamin_a_PARQ",
-            "eb_a003_vitamin_b3_PARQ",
-            "eb_a004_vitamin_b6_PARQ",
-            "eb_a005_vitamin_b12_PARQ",
-            "eb_a006_vitamin_b_comp_PARQ",
-            "eb_a007_vitamin_c_PARQ",
-            "eb_a008_vitamin_d_PARQ",
-            "eb_a009_vitamin_e_PARQ",
-            "eb_a010_calcium_PARQ",
-            "eb_a011_chromium_PARQ",
-            "eb_a012_iron_PARQ",
-            "eb_a013_magnesium_PARQ",
-            "eb_a014_potassium_PARQ",
-            "eb_a015_selenium_PARQ",
-            "eb_a016_zinc_PARQ",
             "eb_a017_blk_cohosh_PARQ",
             "eb_a018_coq10_PARQ",
             "eb_a019_fish_oil_PARQ",
@@ -284,28 +277,9 @@ class Exposome:
             "eb_i254_fries",
             "eb_i256_pizza",
             "eb_i278_other_nuts",
-            "eb_k293_blood_type",
-            "eb_k299a_hyperlipidemia_you",
-            "eb_k301a_clot_prob_you",
-            "eb_k307a_sickle_cell_you",
+            "eb_k293_blood_type"
         ]
 
         selected = df[["epr_number"] + cats]
+        selected.loc[:, "epr_number"] = pd.to_numeric(selected["epr_number"], errors='coerce')
         return selected
-
-
-        # parsed_data = rdata.parser.parse_file(str(rdatafile))
-        # converted = rdata.conversion.convert(parsed_data)
-
-        # df = next(iter(converted.values())) # convert into dataframe
-
-        # # extract
-        # cats = [
-        #     "eb_a019_fish_oil_PARQ",
-        #     "eb_a020_flaxseed_oil_PARQ",
-        #     "eb_a021_folic_acid_PARQ",
-        #     "eb_a022_gingko_biloba_PARQ"
-        # ]
-
-        # selected = df[["epr_number"] + cats]
-        # return selected
