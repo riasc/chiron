@@ -5,7 +5,6 @@ import rdata
 import random
 import pandas as pd
 import numpy as np
-#import pdb
 
 # classes
 import variants
@@ -18,12 +17,11 @@ import helper
 def main():
     options = parse_arguments()
     print(helper.get_current_time() + "Chiron - Starting the prediction using the defined parameters")
-
     dfiles = general.DataFiles(options.input, options.synthetic)
 
     hedata_train = surveys.HealthAndExposure(dfiles.he_survey["train"], "train")
     eadata_train = surveys.Exposome(dfiles.expoa_survey["train"], "train", "exposome_a")
-    #ebdata_train = surveys.Exposome(dfiles.expob_survey["train"], "train", "exposome_b")
+    ebdata_train = surveys.Exposome(dfiles.expob_survey["train"], "train", "exposome_b")
     snvsdata_train = variants.SNVs(dfiles.snvs_data["train"], "train", options.ref, options.threads)
     telomere_train = genomics.Telomere(dfiles.telomere_data["train"], "train")
     ancestry_train = genomics.Ancestry(dfiles.ancestry_data["train"], "train")
@@ -33,6 +31,8 @@ def main():
 
     # merge into one data.
     df_train = hedata_train.rdata
+    df_train = pd.merge(df_train, eadata_train.data, on="epr_number", how="outer")
+    df_train = pd.merge(df_train, ebdata_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, snvsdata_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, telomere_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, ancestry_train.data, on="epr_number", how="outer")
@@ -61,6 +61,7 @@ def main():
 
     hedata_val = surveys.HealthAndExposure(dfiles.he_survey["val"], "val")
     eadata_val = surveys.Exposome(dfiles.expoa_survey["val"], "val", "exposome_a")
+    ebdata_val = surveys.Exposome(dfiles.expob_survey["val"], "val", "exposome_b")
     snvsdata_val = variants.SNVs(dfiles.snvs_data["val"], "val", options.ref, options.threads)
     telomere_val = genomics.Telomere(dfiles.telomere_data["val"], "val")
     ancestry_val = genomics.Ancestry(dfiles.ancestry_data["val"], "val")
@@ -70,6 +71,8 @@ def main():
 
     # merge into one data.frame
     df_val = hedata_val.rdata
+    df_val = pd.merge(df_val, eadata_val.data, on="epr_number", how="outer")
+    df_val = pd.merge(df_val, ebdata_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, snvsdata_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, telomere_val.data, on="epr_number", how="outer")
     df_val = pd.merge(df_val, ancestry_val.data, on="epr_number", how="outer")
@@ -83,6 +86,7 @@ def main():
     df_val.to_csv(output_path, index=False)
 
     df_val.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
+
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers
     df_val = df_val.map(pd.to_numeric, errors='coerce')
 
