@@ -84,11 +84,11 @@ class Model:
             explainer = shap.Explainer(self.best_model, self.X_train)
             shap_values = explainer(self.X_test)
 
-             # Create and save summary plot
+            # Create and save summary plot
             plt.figure(figsize=(12, 8))
-            shap.summary_plot(shap_values, self.X_test, max_display=100, show=False)
+            shap.summary_plot(shap_values, self.X_test, max_display=20, show=False)
             plt.tight_layout()
-            plt.savefig('shap_summary_plot.png', dpi=300, bbox_inches='tight')
+            plt.savefig('shap_summary_plot.svg', format="svg", dpi=300, bbox_inches='tight')
             plt.close()
 
             # Create and save waterfall plot
