@@ -244,9 +244,6 @@ class Exposome:
             subprocess.run(["Rscript", exposome2csv_path, rdatafile, csv_file.name, exposome_type])
             df = pd.read_csv(csv_file.name)
 
-        # print to file for testing
-        df.to_csv("exposome_b.csv", index=False)
-
         cats = [
             "eb_a017_blk_cohosh_PARQ",
             "eb_a018_coq10_PARQ",
