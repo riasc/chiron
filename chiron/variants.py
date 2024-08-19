@@ -104,12 +104,9 @@ class StructuralVariants:
         # samples
         samples = vcf_reader.header.samples.names
 
-        del_count = {}
-        del_len = {}
-        dup_count = {}
-        dup_len = {}
-        inv_count = {}
-        inv_len = {}
+        deletions = {}
+        duplications = {}
+        inversions = {}
 
         for record in vcf_reader:
             chr = record.CHROM
@@ -127,21 +124,17 @@ class StructuralVariants:
                     continue
                 else:
                     if svtype == "DEL":
-                        if sample_id not in del_count:
-                            del_count[sample_id] = 0
-                            del_len[sample_id] = 0
-                        del_count[sample_id] += 1
-                        del_len[sample_id] += svlen
+                        if sample_id not in deletions:
+                            deletions[sample_id] = (0,0)
+                        deletions[sample_id] = (deletions[sample_id][0] + 1, deletions[sample_id][1] + svlen)
                     elif svtype == "DUP":
-                        if sample_id not in dup_count:
-                            dup_count[sample_id] = 0
-                        dup_count[sample_id] += 1
-                        dup_len[sample_id] += svlen
+                        if sample_id not in duplications:
+                            duplications[sample_id] = (0,0)
+                        duplications[sample_id] = (duplications[sample_id][0] + 1, duplications[sample_id][1] + svlen)
                     elif svtype == "INV":
-                        if sample_id not in inv_count:
-                            inv_count[sample_id] = 0
-                        inv_count[sample_id] += 1
-                        inv_len[sample_id] += svlen
+                        if sample_id not in inversions:
+                            inversions[sample_id] = (0,0)
+                        inversions[sample_id] = (inversions[sample_id][0] + 1, inversions[sample_id][1] + svlen)
 
             # iterate through significant genes
             # for gene in self.genes:
@@ -172,21 +165,20 @@ class StructuralVariants:
             #                         inversions[sample_id] += 1
 
         # create data frames
-        del_count_df = pd.DataFrame(list(del_count.items()), columns=['epr_number', 'deletions'])
-        del_len_df = pd.DataFrame(list(del_count.items()), columns=['epr_number', 'deletions'])
-
-        dup_count_df = pd.DataFrame(list(dup_count.items()), columns=['epr_number', 'duplications'])
-        dup_len_df = pd.DataFrame(list(dup_count.items()), columns=['epr_number', 'duplications'])
-
-        inv_count_df = pd.DataFrame(list(inv_count.items()), columns=['epr_number', 'inversions'])
-        inv_len_df = pd.DataFrame(list(inv_count.items()), columns=['epr_number', 'inversions'])
+        # deletions - divide count by length
+        for sample in deletions:
+            deletions[sample] = deletions[sample][1] / deletions[sample][0]
+        del_df = pd.DataFrame(list(deletions.items()), columns=['epr_number', 'deletions'])
+        for sample in duplications:
+            duplications[sample] = duplications[sample][1] / duplications[sample][0]
+        dup_df = pd.DataFrame(list(duplications.items()), columns=['epr_number', 'duplications'])
+        for sample in inversions:
+            inversions[sample] = inversions[sample][1] / inversions[sample][0]
+        inv_df = pd.DataFrame(list(inversions.items()), columns=['epr_number', 'inversions'])
 
         # merge intp one
-        sv_df = pd.merge(del_count_df, del_len_df, on='epr_number', how='outer')
-        sv_df = pd.merge(sv_df, dup_count_df, on='epr_number', how='outer')
-        sv_df = pd.merge(sv_df, dup_len_df, on='epr_number', how='outer')
-        sv_df = pd.merge(sv_df, inv_count_df, on='epr_number', how='outer')
-        sv_df = pd.merge(sv_df, inv_len_df, on='epr_number', how='outer')
+        sv_df = pd.merge(del_df, dup_df, on='epr_number', how='outer')
+        sv_df = pd.merge(sv_df, inv_df, on='epr_number', how='outer')
 
         return sv_df
 
