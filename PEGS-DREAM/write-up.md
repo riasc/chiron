@@ -77,9 +77,7 @@ We used the provided structural variant data and calculated the average length o
 
 We sorted the features according to the absolute number of the SHAP values indicating the impact of the models output. The top 20 features are illustrated in Figure 1. 
 
-
-
-
+![Alt text](https://github.com/riasc/chiron/blob/main/PEGS-DREAM/figure1.svg)
 
 
 ## Discussion
