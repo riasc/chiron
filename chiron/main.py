@@ -40,10 +40,6 @@ def main():
     df_train = pd.merge(df_train, methdata_train.data, on="epr_number", how="outer")
     df_train = pd.merge(df_train, structvardata_train.data, on="epr_number", how="outer")
 
-    # save train data
-    output_path = Path(options.output) / Path("training_data.csv")
-    df_train.to_csv(output_path, index=False)
-
     # preprocess data
     df_train.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
     df_train.drop(columns=['epr_number'], inplace=True)
@@ -81,14 +77,11 @@ def main():
     df_val = pd.merge(df_val, structvardata_val.data, on="epr_number", how="outer")
     print(helper.get_current_time() + "Validation data loaded and preprocessed")
 
-    # save val data
-    output_path = Path(options.output) / Path("train_data.csv")
-    df_val.to_csv(output_path, index=False)
-
     df_val.replace(['.M','.S'], np.nan, inplace=True) # replace missing values
+    df_val = df_val.map(pd.to_numeric, errors='coerce')
+    df_val.replace(-888888, np.nan, inplace=True)
 
     epr_numbers = df_val.pop("epr_number") # save the epr_numbers
-    df_val = df_val.map(pd.to_numeric, errors='coerce')
 
     # predict probabilities
     print(helper.get_current_time() + "Predict disease probabilities")
