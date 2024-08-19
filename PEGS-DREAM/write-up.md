@@ -114,5 +114,5 @@ The provided data of the PEGS DREAM challenge was created using the synthpop v1.
 [13] Nowok, B., Raab, G.M., & Dibben, C. (2016). synthpop: Bespoke Creation of Synthetic Data in R. Journal of Statistical Software, 74(11), 1–26. https://doi.org/10.18637/jss.v074.i11
 
 
-##Authors Statement
+## Authors Statement
 R.A.S. and F.T. designed and implemented the software. R.A.S. refined the feature extraction, and F.T. performed the hyperparameter optimization. R.A.S. and F.T wrote the write-up. 
