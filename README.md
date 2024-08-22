@@ -1,7 +1,5 @@
 [![Downloads](https://img.shields.io/github/downloads/riasc/chiron/total.svg)](https://img.shields.io/github/downloads/riasc/chiron/total.svg)
 
-
-
 # chiron
 Predict hypercholesterolemia from the Personalized Environment and Genes Study
 
@@ -27,7 +25,6 @@ options:
   -s, --synthetic       Use of synthetic data
   -o OUTPUT, --output OUTPUT
                         Output file
-
 
 In the challenge the data was mounted on `/input` and the output was supposed to be written to `/output` in an output file called `predictions.csv` with the following format:
 
@@ -138,6 +135,5 @@ The resulting CpG island are stored in [ref/CpG.txt](https://github.com/riasc/ch
 
 We used the provided structural variant data and calculated the number of deletions, duplications, and inversions
 that occur within the genes associated with hypercholesterolemia. The genes are the same as for the methylation data.
-
 
 # Output
